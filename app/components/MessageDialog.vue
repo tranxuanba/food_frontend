@@ -32,8 +32,10 @@ function handleOk() {
 <style scoped>
 .text-success {
   background-color: #029d16 !important;
+  color:#e9e2e2 !important;
 }
 .text-error {
   background-color: #df4c20 !important;
+  color:#e9e2e2 !important;
 }
 </style>

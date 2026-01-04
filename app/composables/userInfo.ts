@@ -42,9 +42,12 @@ export const useApiFetch = <T>(
 };
 
 export const userApi = () => {
-  const getMe = async () => {
+  const getMe = async (token: string) => {
     return await useApiFetch<UserProfileResponse>("/users/me", {
       method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
     });
   };
 

@@ -24,8 +24,15 @@ export const useCategoryList = () => {
   const setUseCategoryes = (categoryList: any[]) => {
     useCategoryes.value = categoryList;
   };
+  const useSelectedCategoryId = useState<number | null>("categoryId", () => null);
+
+  const setSelectedCategoryId = (categoryId?: number) => {
+    useSelectedCategoryId.value = categoryId ?? null;
+  };
   return {
     useCategoryes,
     setUseCategoryes,
+    useSelectedCategoryId,
+    setSelectedCategoryId
   };
 };

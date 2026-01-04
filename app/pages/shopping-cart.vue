@@ -2,45 +2,34 @@
   <v-container>
     <!-- Data table -->
     <v-card elevation="0">
-      <v-data-table
-        :headers="headers"
-        :items="items"
-        item-key="id"
-        hide-default-footer
-      >
+      <v-data-table :headers="headers" :items="cartItemList" item-key="id" hide-default-footer>
         <!-- Image -->
-        <template #item.image="{ item }">
-          <v-img :src="item.image" width="80" height="80" cover />
+        <template #item.imageUrl="{ item }">
+          <v-img :src="item.imageUrl" width="80" height="80" cover />
         </template>
 
         <!-- Price -->
         <template #item.price="{ item }">
-          <span>{{ formatPrice(item.price) }}</span>
+          <span class="price">{{ formatPrice(item.price) }}</span>
         </template>
 
         <!-- Quantity -->
         <template #item.quantity="{ item }">
-          <v-btn size="small" variant="tonal" @click="decrease(item)">
-            −
-          </v-btn>
-
-          <span class="mx-3">{{ item.quantity }}</span>
-
-          <v-btn size="small" variant="tonal" @click="increase(item)">
-            +
-          </v-btn>
+          <v-number-input inset variant="solo-filled" v-model="item.quantity" control-variant="split" elevation="0"
+            class="no-shadow-number" hide-details @update:model-value="(val) => onQuantityChange(item, val)"
+            density="compact"></v-number-input>
         </template>
 
         <!-- Total -->
         <template #item.total="{ item }">
-          <span>
+          <span class="price">
             {{ formatPrice(item.price * item.quantity) }}
           </span>
         </template>
 
         <!-- Delete -->
         <template #item.actions="{ item }">
-          <v-btn icon variant="text" color="grey" @click="remove(item.id)">
+          <v-btn icon variant="text" color="red-lighten-1" @click="removeFoodInCart(item.cartItemId)">
             <v-icon>mdi-delete</v-icon>
           </v-btn>
         </template>
@@ -49,10 +38,10 @@
 
     <!-- Footer -->
     <div class="d-flex justify-space-between align-center mt-6">
-      <div class="font-weight-bold text-common">
-        Tổng tiền: {{ formatPrice(totalPrice) }}
+      <div>
+        <span class="mr-2 text-common">Tổng tiền:</span><span class="font-weight-bold price">{{
+          formatPrice(totalPrice) }}</span>
       </div>
-
       <div class="d-flex gap-3">
         <v-btn color="#9c9696" variant="flat"> Tiếp tục mua hàng </v-btn>
         <v-btn color="#029d16" class="ml-2" variant="flat"> Tiến hành đặt hàng </v-btn>
@@ -62,36 +51,91 @@
 </template>
 
 <script setup lang="ts">
-import Rau1 from "@/assets/images/rau1.jpg";
-import Rau2 from "@/assets/images/rau2.jpg";
 import { ref, onMounted } from "vue";
+import { useCartItemMeList } from "../composables/cartItemMe";
+import { useLocalStorage } from "@vueuse/core";
 
-const items = ref([
-  {
-    id: 1,
-    image: Rau1,
-    name: "Khoai mỡ Organic 300gr",
-    price: 26000,
-    quantity: 1,
-  },
-  {
-    id: 2,
-    image: Rau2,
-    name: "Bún Tươi Sấy Khô 400gr Hoa Nắng",
-    price: 73000,
-    quantity: 1,
-  },
-]);
-
+const { useCartItemMes } = useCartItemMeList();
+const { totalCount } = useCartItemMeList();
+const { setTotalCount } = useCartItemMeList();
+const { setCartItemMes } = useCartItemMeList();
+const onQuantityChange = async (item: any, updateQuantity: number) => {
+  await callCartMeUpdateApi(getUserId(), item.foodId, updateQuantity);
+  await getCartInfo();
+};
+const userStorage = useLocalStorage<any>("user_me", "");
+const getUserId = () => {
+  const userId = computed(
+    () => JSON.parse(userStorage.value || "{}")?.userId ?? ""
+  );
+  return userId.value;
+}
+const isLoginOk = () => {
+  if (getUserId() !== "") {
+    return false;
+  }
+  return true;
+}
+const callCartMeUpdateApi = async (userId: string, foodId: number, quantity: number) => {
+  const updateToCartParam: any = {
+    userId: userId,
+    foodId: foodId,
+    quantity: quantity,
+  };
+  try {
+    const updateCartItem = cartItemMeUpdateApi();
+    await updateCartItem(updateToCartParam);
+  } catch (err) {
+    console.error("lỗi update sản phẩm vào giỏ hàng", err);
+  }
+};
+const cartItemList = ref<any[]>([]);
+const getCartInfo = async () => {
+  if (isLoginOk()) {
+    return;
+  } else {
+    const cartParam: any = {
+      userId: getUserId()
+    };
+    try {
+      const { cartItemMeList } = cartItemMeListApi();
+      cartItemList.value = await cartItemMeList(cartParam);
+      totalCount.value = cartItemList.value[0].totalCount ?? 0;
+      setCartItemMes(cartItemList.value);
+      setTotalCount(totalCount.value);
+    } catch (err) {
+      console.error("Fetch food error", err);
+    }
+  }
+};
+const callCartMeDeleteApi = async (cartItemId: number) => {
+  const deleteCartParam: any = {
+    cartItemId: cartItemId,
+  };
+  try {
+    const deleteCartItem = cartItemMeDeleteApi();
+    await deleteCartItem(deleteCartParam);
+  } catch (err) {
+    console.error("xóa cart không thành công", err);
+  }
+};
+const removeFoodInCart = async (cartItemId: any) => {
+  await callCartMeDeleteApi(cartItemId)
+  await getCartInfo();
+}
+onMounted(async () => {
+  getCartInfo();
+  getCategoryList();
+});
 const headers = [
   {
     title: "Sản phẩm",
-    key: "image",
+    key: "imageUrl",
     headerProps: { class: "font-weight-bold text-common" },
   },
   {
     title: "Thông tin sản phẩm",
-    key: "name",
+    key: "foodName",
     headerProps: { class: "font-weight-bold text-common" },
   },
   {
@@ -113,18 +157,21 @@ const headers = [
 ];
 
 const formatPrice = (v: number) => v.toLocaleString("vi-VN") + "đ";
-
-const increase = (item: any) => item.quantity++;
-const decrease = (item: any) => {
-  if (item.quantity > 1) item.quantity--;
-};
-const remove = (id: number) => {
-  items.value = items.value.filter((i) => i.id !== id);
-};
-
 const totalPrice = computed(() =>
-  items.value.reduce((sum, i) => sum + i.price * i.quantity, 0)
+  useCartItemMes.value.reduce((sum, i) => sum + i.price * i.quantity, 0)
 );
+// lấy danh sách category
+const categories = ref<any[]>([]);
+const { setUseCategoryes } = useCategoryList();
+const getCategoryList = async () => {
+  try {
+    const { categoryList } = categoryListApi();
+    categories.value = await categoryList();
+    setUseCategoryes(categories.value);
+  } catch (err) {
+    console.error("Fetch food error", err);
+  }
+};
 </script>
 
 <style scoped>
@@ -140,6 +187,7 @@ const totalPrice = computed(() =>
   grid-template-columns: repeat(3, 1fr);
   gap: 20px;
 }
+
 .product-filter {
   max-width: 260px;
   border: 1px solid #eee;
@@ -153,5 +201,15 @@ const totalPrice = computed(() =>
 
 .text-green {
   color: #029d16;
+}
+
+.no-shadow-number ::v-deep(.v-field) {
+  box-shadow: none !important;
+  background-color: #fff !important;
+  max-width: 150px !important;
+}
+
+.price {
+  color: #f57c00;
 }
 </style>

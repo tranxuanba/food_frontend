@@ -5,15 +5,8 @@
         <!-- Cột 1: Thông tin công ty -->
         <v-col cols="3">
           <v-list bg-color="#029d16">
-            <v-list-subheader class="text-footer"
-              >SHOP NHÀ BA DUNG</v-list-subheader
-            >
-            <v-list-item
-              v-for="(item, i) in baDungItems"
-              :key="i"
-              :value="item"
-              color="primary"
-            >
+            <v-list-subheader class="text-footer">SHOP NHÀ BA DUNG</v-list-subheader>
+            <v-list-item v-for="(item, i) in baDungItems" :key="i" :value="item" color="primary">
               <template v-slot:prepend>
                 <v-icon :icon="item.icon"></v-icon>
               </template>
@@ -26,15 +19,8 @@
         <!-- Cột 2: Danh mục -->
         <v-col cols="3">
           <v-list bg-color="#029d16">
-            <v-list-subheader class="text-footer"
-              >DANH MỤC SẢN PHẨM</v-list-subheader
-            >
-            <v-list-item
-              v-for="(item, i) in categoryItems"
-              :key="i"
-              :value="item.categoryId"
-              color="primary"
-            >
+            <v-list-subheader class="text-footer">DANH MỤC SẢN PHẨM</v-list-subheader>
+            <v-list-item v-for="(item, i) in categoryItems" :key="i" :value="item.categoryId" color="primary">
               <template #prepend>
                 <v-icon icon="mdi-circle" size="10" color="white" />
               </template>
@@ -47,15 +33,8 @@
         <!-- Cột 3: Hỗ trợ -->
         <v-col cols="3">
           <v-list bg-color="#029d16">
-            <v-list-subheader class="text-footer"
-              >HỖ TRỢ KHÁCH HÀNG</v-list-subheader
-            >
-            <v-list-item
-              v-for="(item, i) in supportItems"
-              :key="i"
-              :value="item"
-              color="primary"
-            >
+            <v-list-subheader class="text-footer">HỖ TRỢ KHÁCH HÀNG</v-list-subheader>
+            <v-list-item v-for="(item, i) in supportItems" :key="i" :value="item" color="primary">
               <template #prepend>
                 <v-icon icon="mdi-circle" size="10" color="white" />
               </template>
@@ -67,15 +46,8 @@
         <!-- Cột 4: Về Organic -->
         <v-col cols="3">
           <v-list bg-color="#029d16">
-            <v-list-subheader class="text-footer"
-              >VỀ CHÚNG TÔI</v-list-subheader
-            >
-            <v-list-item
-              v-for="(item, i) in aboutUsItems"
-              :key="i"
-              :value="item"
-              color="primary"
-            >
+            <v-list-subheader class="text-footer">VỀ CHÚNG TÔI</v-list-subheader>
+            <v-list-item v-for="(item, i) in aboutUsItems" :key="i" :value="item" color="primary">
               <template #prepend>
                 <v-icon icon="mdi-circle" size="10" color="white" />
               </template>
@@ -99,8 +71,8 @@ const { useCategoryes } = useCategoryList();
 
 const year = new Date().getFullYear();
 const baDungItems = [
-  { text: "339/26 Tô Hiến Thành, P.12, Q.10, TP. HCM", icon: "mdi-map-marker" },
-  { text: "079 668 0669", icon: "mdi-phone" },
+  { text: "Căn chung cư số 3012A, Tòa I4 Imperia Smart City, Khu đô thị mới Tây Mỗ - Đại Mỗ, Hà Nội", icon: "mdi-map-marker" },
+  { text: "035 521 0795", icon: "mdi-phone" },
   { text: "Thứ 2 - Chủ nhật: 9:00 - 18:00", icon: "mdi-clock-outline" },
   { text: "thoitran2107@gmail.com", icon: "mdi-email-outline" },
 ];
@@ -124,6 +96,7 @@ const aboutUsItems = [{ text: "Giới thiệu" }, { text: "Tầm nhìn & Sứ m�
   color: #fff;
   font-size: 14px;
 }
+
 .footer-bottom {
   padding-top: 15px;
 }

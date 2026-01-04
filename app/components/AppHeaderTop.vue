@@ -2,11 +2,11 @@
   <div class="top-bar">
     <v-btn variant="text" color="white">
       <v-icon start>mdi-phone</v-icon>
-      Hotline: 079 668 0669
+      Hotline: 035 521 0795
     </v-btn>
     <v-chip text-color="white">
       <v-icon start>mdi-map-marker</v-icon>
-      Địa chỉ: 339/26 Tô Hiến Thành, P.12, Q.10, TP. HCM
+      Địa chỉ: Căn chung cư số 3012A, Tòa I4 Imperia Smart City, Khu đô thị mới Tây Mỗ - Đại Mỗ, Hà Nội
     </v-chip>
     <v-chip text-color="white">
       <v-icon start>mdi-truck-fast</v-icon>
@@ -22,21 +22,11 @@
         {{ loginUserName !== "" ? loginUserName : "Đăng nhập" }}
       </v-btn>
 
-      <v-btn
-        v-if="loginOk == false"
-        @click="authClick(false)"
-        variant="text"
-        size="small"
-      >
+      <v-btn v-if="loginOk == false" @click="authClick(false)" variant="text" size="small">
         <v-icon start>mdi-account-plus</v-icon>
         Đăng ký
       </v-btn>
-      <v-btn
-        v-if="loginOk == true"
-        @click="logoutClick()"
-        variant="text"
-        size="small"
-      >
+      <v-btn v-if="loginOk == true" @click="logoutClick()" variant="text" size="small">
         <v-icon start>mdi-logout</v-icon>
         Logout
       </v-btn>
@@ -73,17 +63,16 @@ if (loginUserName.value !== "") {
 }
 
 watch(loginUserName, (newVal) => {
-  if (newVal.value !== "") {
+  if (newVal !== "" && !loginOk.value) {
     loginOk.value = true;
-  }else{
-    loginOk.value = false;
-  }
+  } 
 });
 
 const logoutClick = () => {
   loginOk.value = false;
   auth.clear();
   userStorage.value = "";
+  navigateTo(`/food-main`);
 };
 </script>
 <style scoped>

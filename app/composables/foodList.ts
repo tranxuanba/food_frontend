@@ -37,9 +37,16 @@ export const useFoodList = () => {
   const setFoods = (foodList: any[]) => {
     useFoods.value = foodList;
   };
+  const useSearchFoodName = useState<string>("foodName", () => "");
+
+  const setSearchFoodName = (foodName?: string) => {
+    useSearchFoodName.value = foodName ?? "";
+  };
   return {
     useFoods,
     setFoods,
+    useSearchFoodName,
+    setSearchFoodName
   };
 };
 
