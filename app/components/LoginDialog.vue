@@ -107,9 +107,6 @@ const password = ref("");
 const fullName = ref("");
 
 const isLogin = computed(() => props.mode === "login");
-
-const close = () => emit("update:modelValue", false);
-
 const registerBuyer = async () => {
   const registerParam: any = ref({
     fullName: fullName.value,
@@ -118,9 +115,10 @@ const registerBuyer = async () => {
   });
   try {
     const { registerBuyer } = authRegisterApi();
-    const registerRes = await registerBuyer(registerParam.value);
+    await registerBuyer(registerParam.value);
+    handleRegisterOk();
   } catch (err) {
-    console.error("Lỗi đăng ký:", err);
+    handleRegisterError();
   }
 };
 
@@ -141,16 +139,17 @@ const doLogin = async () => {
 };
 
 const submitForm = () => {
-  if (isLogin) {
+  if (isLogin.value) {
     doLogin();
   } else {
     registerBuyer();
+    doLogin();
   }
 };
 const showMessage = ref<boolean>(false);
 const message = ref("");
 const isSuccess = ref<boolean>(false);
-const handleDologinSucess = (userMe: any) => {
+const handleDologinSucess = async (userMe: any) => {
   modelValue.value = false;
   userStorage.value = JSON.stringify(userMe);
   showMessage.value = true;
@@ -162,6 +161,17 @@ const handleDologinError = () => {
   message.value = "Đăng nhập thất bại, tên người dùng hoặc mật khẩu chưa đúng";
   isSuccess.value = false;
 };
+const handleRegisterOk = () => {
+  modelValue.value = false;
+  showMessage.value = true;
+  message.value = "Tài khoản đã được đăng ký thành công. Vui lòng bấm OK để tắt và tiến hành đăng nhập."
+  isSuccess.value = true;
+}
+const handleRegisterError = () => {
+  showMessage.value = true;
+  message.value = "Đăng ký tài khoản thất bại, địa chỉ email hoặc mật khẩu không hợp lệ."
+  isSuccess.value = false;
+}
 </script>
 
 <style scoped>

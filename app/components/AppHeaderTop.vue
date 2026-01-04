@@ -39,6 +39,7 @@ import { ref } from "vue";
 import LoginDialog from "../components/LoginDialog.vue";
 import { useLocalStorage } from "@vueuse/core";
 
+const route = useRoute();
 const auth = useAuthStore();
 
 const showAuth = ref(false);
@@ -65,14 +66,17 @@ if (loginUserName.value !== "") {
 watch(loginUserName, (newVal) => {
   if (newVal !== "" && !loginOk.value) {
     loginOk.value = true;
-  } 
+  }
 });
 
-const logoutClick = () => {
+const logoutClick = async () => {
   loginOk.value = false;
   auth.clear();
   userStorage.value = "";
-  navigateTo(`/food-main`);
+  if (!route.fullPath.includes("food-main")) {
+    await navigateTo(`/food-main`);
+  }
+  window.location.reload();
 };
 </script>
 <style scoped>

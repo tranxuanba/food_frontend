@@ -5,11 +5,8 @@
         {{ message }}
       </v-card-text>
       <v-card-actions class="my-2 d-flex justify-center">
-        <v-btn
-          :class="isSuccess ? 'text-success' : 'text-error'"
-          :text="isSuccess ? 'OK' : 'Trở về'"
-          @click="handleOk"
-        />
+        <v-btn :class="isSuccess ? 'text-success' : 'text-error'" :text="isSuccess ? 'OK' : 'Trở về'"
+          @click="handleOk" />
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -24,7 +21,11 @@ const props = defineProps<{
 
 const emit = defineEmits(["update:visible"]);
 
-function handleOk() {
+async function handleOk() {
+  if (props.isSuccess) {
+    await navigateTo(`/food-main`);
+    window.location.reload();
+  }
   visible.value = false;
 }
 </script>
@@ -32,10 +33,11 @@ function handleOk() {
 <style scoped>
 .text-success {
   background-color: #029d16 !important;
-  color:#e9e2e2 !important;
+  color: #e9e2e2 !important;
 }
+
 .text-error {
   background-color: #df4c20 !important;
-  color:#e9e2e2 !important;
+  color: #e9e2e2 !important;
 }
 </style>

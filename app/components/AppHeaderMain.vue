@@ -16,7 +16,12 @@
         </template>
 
         <v-card min-width="400">
-          <div v-if="useCartItemMes.length === 0">Giỏ hàng trống</div>
+          <div v-if="useCartItemMes.length === 0">
+            <v-card-text class="text-common">
+              <v-row class="pa-2 d-flex align-center">
+                <v-col>Giỏ hàng trống</v-col>
+              </v-row></v-card-text>
+          </div>
           <div v-else>
             <v-card-text class="text-common">
               <v-row class="py-1" v-for="item in useCartItemMes">
@@ -151,7 +156,6 @@ watch(useSelectedCategoryId, (newVal) => {
     getFoodList();
   }
 });
-const selectedCategory = ref(null);
 const foods = ref<any[]>([]);
 const getFoodList = async () => {
   const searchForm: any = {
