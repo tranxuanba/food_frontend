@@ -7,6 +7,12 @@ export interface FoodListResponse {
   foodName: string;
   price: number;
   imageUrl: string;
+  totalCount: number;
+}
+export interface Pagination {
+  page: number;
+  limit: number;
+  offset?: number;
 }
 
 export const foodListApi = () => {
@@ -42,12 +48,25 @@ export const useFoodList = () => {
   const setSearchFoodName = (foodName?: string) => {
     useSearchFoodName.value = foodName ?? "";
   };
+  const usePagination = useState<Pagination>("pagination", () => ({
+    page: 1,
+    limit: 10,
+    offset: 0,
+  }));
+
+  const setPagination = (pagination?: any) => {
+    usePagination.value = pagination ?? {
+      page: 1,
+      limit: 10,
+      offset: 0,
+    };
+  };
   return {
     useFoods,
     setFoods,
     useSearchFoodName,
-    setSearchFoodName
+    setSearchFoodName,
+    usePagination,
+    setPagination,
   };
 };
-
-

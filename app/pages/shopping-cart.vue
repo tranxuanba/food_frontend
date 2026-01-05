@@ -2,7 +2,12 @@
   <v-container>
     <!-- Data table -->
     <v-card elevation="0">
-      <v-data-table :headers="headers" :items="cartItemList" item-key="id" hide-default-footer>
+      <v-data-table
+        :headers="headers"
+        :items="cartItemList"
+        item-key="id"
+        hide-default-footer
+      >
         <!-- Image -->
         <template #item.imageUrl="{ item }">
           <v-img :src="item.imageUrl" width="80" height="80" cover />
@@ -15,9 +20,17 @@
 
         <!-- Quantity -->
         <template #item.quantity="{ item }">
-          <v-number-input inset variant="solo-filled" v-model="item.quantity" control-variant="split" elevation="0"
-            class="no-shadow-number" hide-details @update:model-value="(val) => onQuantityChange(item, val)"
-            density="compact"></v-number-input>
+          <v-number-input
+            inset
+            variant="solo-filled"
+            v-model="item.quantity"
+            control-variant="split"
+            elevation="0"
+            class="no-shadow-number"
+            hide-details
+            @update:model-value="(val) => onQuantityChange(item, val)"
+            density="compact"
+          ></v-number-input>
         </template>
 
         <!-- Total -->
@@ -29,7 +42,12 @@
 
         <!-- Delete -->
         <template #item.actions="{ item }">
-          <v-btn icon variant="text" color="red-lighten-1" @click="removeFoodInCart(item.cartItemId)">
+          <v-btn
+            icon
+            variant="text"
+            color="red-lighten-1"
+            @click="removeFoodInCart(item.cartItemId)"
+          >
             <v-icon>mdi-delete</v-icon>
           </v-btn>
         </template>
@@ -39,12 +57,16 @@
     <!-- Footer -->
     <div class="d-flex justify-space-between align-center mt-6">
       <div>
-        <span class="mr-2 text-common">Tổng tiền:</span><span class="font-weight-bold price">{{
-          formatPrice(totalPrice) }}</span>
+        <span class="mr-2 text-common">Tổng tiền:</span
+        ><span class="font-weight-bold price">{{
+          formatPrice(totalPrice)
+        }}</span>
       </div>
       <div class="d-flex gap-3">
         <v-btn color="#9c9696" variant="flat"> Tiếp tục mua hàng </v-btn>
-        <v-btn color="#029d16" class="ml-2" variant="flat"> Tiến hành đặt hàng </v-btn>
+        <v-btn color="#029d16" class="ml-2" variant="flat">
+          Tiến hành đặt hàng
+        </v-btn>
       </div>
     </div>
   </v-container>
@@ -69,14 +91,18 @@ const getUserId = () => {
     () => JSON.parse(userStorage.value || "{}")?.userId ?? ""
   );
   return userId.value;
-}
+};
 const isLoginOk = () => {
   if (getUserId() !== "") {
     return false;
   }
   return true;
-}
-const callCartMeUpdateApi = async (userId: string, foodId: number, quantity: number) => {
+};
+const callCartMeUpdateApi = async (
+  userId: string,
+  foodId: number,
+  quantity: number
+) => {
   const updateToCartParam: any = {
     userId: userId,
     foodId: foodId,
@@ -95,7 +121,7 @@ const getCartInfo = async () => {
     return;
   } else {
     const cartParam: any = {
-      userId: getUserId()
+      userId: getUserId(),
     };
     try {
       const { cartItemMeList } = cartItemMeListApi();
@@ -120,9 +146,9 @@ const callCartMeDeleteApi = async (cartItemId: number) => {
   }
 };
 const removeFoodInCart = async (cartItemId: any) => {
-  await callCartMeDeleteApi(cartItemId)
+  await callCartMeDeleteApi(cartItemId);
   await getCartInfo();
-}
+};
 onMounted(async () => {
   getCartInfo();
   getCategoryList();
@@ -153,7 +179,11 @@ const headers = [
     key: "total",
     headerProps: { class: "font-weight-bold text-common" },
   },
-  { title: "Xóa", key: "actions", headerProps: { class: "font-weight-bold text-common" } },
+  {
+    title: "Xóa",
+    key: "actions",
+    headerProps: { class: "font-weight-bold text-common" },
+  },
 ];
 
 const formatPrice = (v: number) => v.toLocaleString("vi-VN") + "đ";

@@ -7,15 +7,24 @@
         </v-sheet>
         <v-card-text>
           <v-radio-group v-model="selectedCategory">
-            <v-radio v-for="item in categories" :label="item.categoryName" :value="item.categoryId" />
+            <v-radio
+              v-for="item in categories"
+              :label="item.categoryName"
+              :value="item.categoryId"
+            />
           </v-radio-group>
         </v-card-text>
       </v-card>
     </v-col>
     <v-col>
-      <v-row>
-        <v-col v-for="item in useFoods" :key="item.foodId" cols="2" sm="6" md="4" lg="3">
-          <v-card class="product-card" elevation="0" variant="outlined" rounded="lg">
+      <v-row class="food-cart pt-3 pr-3">
+        <v-col class="pa-0" v-for="item in useFoods" :key="item.foodId">
+          <v-card
+            class="product-card"
+            elevation="0"
+            variant="outlined"
+            rounded="lg"
+          >
             <v-img :src="item.imageUrl" aspect-ratio="1" cover />
 
             <v-card-text class="text-center pt-3">
@@ -31,12 +40,21 @@
               <v-spacer />
 
               <!-- Xem chi tiết -->
-              <v-btn icon variant="text" @click="showProductDialog(item.foodId)">
+              <v-btn
+                icon
+                variant="text"
+                @click="showProductDialog(item.foodId)"
+              >
                 <v-icon>mdi-eye-outline</v-icon>
               </v-btn>
 
               <!-- Thêm giỏ -->
-              <v-btn icon variant="text" color="success" @click="addToCart(item)">
+              <v-btn
+                icon
+                variant="text"
+                color="success"
+                @click="addToCart(item)"
+              >
                 <v-icon>mdi-cart-plus</v-icon>
               </v-btn>
             </v-card-actions>
@@ -44,14 +62,25 @@
         </v-col>
       </v-row>
       <v-row>
-        <Pagination v-model="page" :items="users" :items-per-page="10" />
+        <Pagination
+          v-model:pagination="pagination"
+          :totalItems="totalItems"
+          @update:pagination="handlePaginationUpdate"
+        />
       </v-row>
     </v-col>
   </v-row>
   <div class="category-page"></div>
   <ProductDialog v-model="showDialog" :food_info="foodDetail" />
-  <CartDialog v-model="showCartDialog" :foodName="foodNameCart" :imageUrl="imageUrlCart" :price="priceCart"
-    :foodId="foodIdCart" :userId="userId" :totalCount="totalCount" />
+  <CartDialog
+    v-model="showCartDialog"
+    :foodName="foodNameCart"
+    :imageUrl="imageUrlCart"
+    :price="priceCart"
+    :foodId="foodIdCart"
+    :userId="userId"
+    :totalCount="totalCount"
+  />
   <ConfirmLoginDialog v-model="confirmLogin" />
 </template>
 
@@ -59,9 +88,12 @@
 import { categoryListApi, useCategoryList } from "../composables/categoryList";
 import { useFoodList } from "../composables/foodList";
 import { foodInfoApi } from "../composables/foodInfo";
-import { cartItemMeUpdateApi, cartItemMeListApi, useCartItemMeList } from "../composables/cartItemMe";
+import {
+  cartItemMeUpdateApi,
+  cartItemMeListApi,
+  useCartItemMeList,
+} from "../composables/cartItemMe";
 import { useLocalStorage } from "@vueuse/core";
-
 
 import Pagination from "../components/Pagination.vue";
 import { ref, onMounted } from "vue";
@@ -69,7 +101,7 @@ import ProductDialog from "../components/ProductDialog.vue";
 import CartDialog from "../components/CartDialog.vue";
 
 const { setTotalCount, setCartItemMes } = useCartItemMeList();
-const { useFoods } = useFoodList();
+const { useFoods, setPagination } = useFoodList();
 const { setUseCategoryes, setSelectedCategoryId } = useCategoryList();
 const showDialog = ref(false);
 const showCartDialog = ref(false);
@@ -86,17 +118,30 @@ const showProductDialog = async (foodId: number) => {
   }
   showDialog.value = true;
 };
+const totalItems = ref<number>(0);
+watch(
+  () => useFoods.value,
+  (val) => {
+    if (val.length > 0) {
+      totalItems.value = val[0].totalCount;
+    }
+  },
+  { immediate: true }
+);
 
-const page = ref(1);
-const users = Array.from({ length: 37 }, (_, i) => ({
-  id: i + 1,
-  name: `User ${i + 1}`,
-}));
+const pagination = ref<any>({
+  page: 1,
+  limit: 10,
+  offset: 0,
+});
+const handlePaginationUpdate = async (pagination: any) => {
+  setPagination(pagination);
+};
 
-const foodNameCart = ref<string>('');
-const imageUrlCart = ref<string>('');
-const priceCart = ref<string>('');
-const userId = ref<string>('');
+const foodNameCart = ref<string>("");
+const imageUrlCart = ref<string>("");
+const priceCart = ref<string>("");
+const userId = ref<string>("");
 const foodIdCart = ref<number>(0);
 const totalCount = ref<number>(0);
 const confirmLogin = ref<boolean>(false);
@@ -111,20 +156,19 @@ const isLoginOk = () => {
     return false;
   }
   return true;
-}
+};
 const addToCart = async (item: any) => {
   if (isLoginOk()) {
     confirmLogin.value = true;
   } else {
     await callCartMeUpdateApi(userId.value, item.foodId);
-    foodNameCart.value = item.foodName
-    imageUrlCart.value = item.imageUrl
-    priceCart.value = formatPrice(item.price)
-    foodIdCart.value = item.foodId
+    foodNameCart.value = item.foodName;
+    imageUrlCart.value = item.imageUrl;
+    priceCart.value = formatPrice(item.price);
+    foodIdCart.value = item.foodId;
     await getTotalCount();
-    showCartDialog.value = true
+    showCartDialog.value = true;
   }
-
 };
 const cartItemList = ref<any[]>([]);
 const getTotalCount = async () => {
@@ -132,7 +176,7 @@ const getTotalCount = async () => {
     return;
   } else {
     const cartParam: any = {
-      userId: userId.value
+      userId: userId.value,
     };
     try {
       const { cartItemMeList } = cartItemMeListApi();
@@ -147,9 +191,7 @@ const getTotalCount = async () => {
 };
 const callCartMeUpdateApi = async (userId: string, foodId: number) => {
   const { useCartItemMes } = useCartItemMeList();
-  const cartItem = useCartItemMes.value.find(
-    item => item.foodId === foodId
-  );
+  const cartItem = useCartItemMes.value.find((item) => item.foodId === foodId);
 
   const quantityBeforeUpdate = cartItem?.quantity ?? 0;
 
@@ -217,6 +259,11 @@ watch(selectedCategory, (newVal) => {
 .product-card {
   transition: 0.2s ease;
   border: 1px solid #eee;
+}
+.food-cart {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 16px;
 }
 
 .text-green {
