@@ -17,16 +17,16 @@
       Giờ làm việc: T2 - T7 từ 7h30 đến 6h00
     </v-chip>
     <div>
-      <v-btn @click="authClick(true)" variant="text" size="small">
+      <v-btn class="text-none" @click="authClick(true)" variant="text" size="small">
         <v-icon start>mdi-login</v-icon>
         {{ loginUserName !== "" ? loginUserName : "Đăng nhập" }}
       </v-btn>
 
-      <v-btn v-if="loginOk == false" @click="authClick(false)" variant="text" size="small">
+      <v-btn class="text-none" v-if="loginOk == false" @click="authClick(false)" variant="text" size="small">
         <v-icon start>mdi-account-plus</v-icon>
         Đăng ký
       </v-btn>
-      <v-btn v-if="loginOk == true" @click="logoutClick()" variant="text" size="small">
+      <v-btn class="text-none" v-if="loginOk == true" @click="logoutClick()" variant="text" size="small">
         <v-icon start>mdi-logout</v-icon>
         Logout
       </v-btn>

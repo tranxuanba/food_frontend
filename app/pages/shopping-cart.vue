@@ -63,8 +63,10 @@
         }}</span>
       </div>
       <div class="d-flex gap-3">
-        <v-btn color="#9c9696" variant="flat"> Tiếp tục mua hàng </v-btn>
-        <v-btn color="#029d16" class="ml-2" variant="flat">
+        <v-btn class="text-none" color="#9c9696" variant="flat">
+          Tiếp tục mua hàng
+        </v-btn>
+        <v-btn color="#029d16" class="ml-2 text-none" variant="flat">
           Tiến hành đặt hàng
         </v-btn>
       </div>
@@ -183,6 +185,9 @@ const headers = [
     title: "Xóa",
     key: "actions",
     headerProps: { class: "font-weight-bold text-common" },
+    cellProps: {
+      class: "last-column",
+    },
   },
 ];
 
@@ -241,5 +246,22 @@ const getCategoryList = async () => {
 
 .price {
   color: #f57c00;
+}
+
+::v-deep(.v-data-table th),
+::v-deep(.v-data-table td) {
+  border-left: 1px solid #eee;
+}
+::v-deep(.v-data-table th) {
+  border-top: 1px solid #eee;
+}
+::v-deep(.v-data-table td) {
+  border-bottom: 1px solid #eee;
+  padding-top: 10px !important;
+  padding-bottom: 10px !important;
+}
+::v-deep(.v-data-table thead tr th:last-child),
+::v-deep(.last-column) {
+  border-right: 1px solid #eee !important;
 }
 </style>

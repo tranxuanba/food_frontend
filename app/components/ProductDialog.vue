@@ -54,9 +54,9 @@
               ></v-number-input>
             </div>
 
-            <v-btn
+            <v-btn 
               color="#029d16"
-              class="ml-6"
+              class="text-none ml-6"
               size="large"
               @click="addToCart(foodInfo)"
             >

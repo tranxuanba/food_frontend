@@ -25,6 +25,7 @@
       >
         <template #activator="{ props }">
           <v-btn
+            class="text-none"
             v-bind="props"
             color="#029d16"
             variant="flat"
@@ -35,7 +36,7 @@
           </v-btn>
         </template>
 
-        <v-card min-width="400">
+        <v-card min-width="400" max-height="700">
           <div v-if="useCartItemMes.length === 0">
             <v-card-text class="text-common">
               <v-row class="pa-2 d-flex align-center">
@@ -93,12 +94,12 @@
             </v-card-text>
             <v-card-actions class="mb-2 d-flex justify-center">
               <v-btn
-                class="btn-shopping-cart"
+                class="btn-shopping-cart text-none"
                 text="Giỏ hàng"
                 @click="handleShoppingCart"
               />
               <v-btn
-                class="btn-payment-cart"
+                class="btn-payment-cart text-none"
                 text="Thanh toán"
                 @click="handlePayment"
               />

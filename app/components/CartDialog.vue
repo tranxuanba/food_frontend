@@ -26,8 +26,8 @@
       </v-card-text>
       <v-divider />
       <v-card-actions class="my-2 d-flex justify-center">
-        <v-btn class="btn-shopping-cart" :text="'Giỏ hàng(' + totalCount + ')'" @click="handleShoppingCart" />
-        <v-btn class="btn-payment-cart" text="Tiến hành thanh toán" @click="handlePayment" />
+        <v-btn class="btn-shopping-cart text-none" :text="'Giỏ hàng(' + totalCount + ')'" @click="handleShoppingCart" />
+        <v-btn class="btn-payment-cart text-none" text="Tiến hành thanh toán" @click="handlePayment" />
       </v-card-actions>
     </v-card>
   </v-dialog>
