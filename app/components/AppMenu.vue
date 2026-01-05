@@ -1,14 +1,7 @@
 <template>
-  <v-container
-    style="background-color: #029d16; color: white; margin-bottom: 15px"
-  >
+  <v-container style="background-color: #029d16; color: white; margin-bottom: 15px">
     <template v-for="(menu, index) in menus" :key="index">
-      <v-btn
-        class="text-none"
-        v-if="!menu.children"
-        variant="text"
-        :to="menu.to"
-      >
+      <v-btn class="text-none" v-if="!menu.children" variant="text" :to="menu.to">
         {{ menu.title }}
       </v-btn>
       <v-menu v-else :open-on-click="true" location="bottom" offset="8">
@@ -21,11 +14,7 @@
 
         <v-card width="300">
           <v-list>
-            <v-list-item
-              v-for="item in menu.children"
-              :key="item.categoryId"
-              @click="onClickCategory(item.categoryId)"
-            >
+            <v-list-item v-for="item in menu.children" :key="item.categoryId" @click="onClickCategory(item.categoryId)">
               {{ item.categoryName }}
             </v-list-item>
           </v-list>

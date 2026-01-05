@@ -22,45 +22,46 @@
       </div>
 
       <!-- Form -->
-      <v-row>
-        <v-col cols="1"></v-col>
-        <v-col cols="10">
-          <v-row>
-            <v-col>
-              <label v-if="!isLogin" class="input-label text-common">Tên người dùng</label>
-              <v-text-field v-if="!isLogin" v-model="fullName" variant="outlined" hide-details="auto"
-                class="custom-input" placeholder="Nhập họ và tên..."></v-text-field>
-            </v-col>
-          </v-row>
-          <v-row>
-            <v-col>
-              <label class="input-label text-common">Email</label>
-              <v-text-field v-model="email" variant="outlined" hide-details="auto" class="custom-input"
-                placeholder="Nhập email..."></v-text-field>
-            </v-col>
-          </v-row>
-          <v-row class="mb-4">
-            <v-col>
-              <label class="input-label text-common">Mật khẩu</label>
-              <v-text-field v-model="password" variant="outlined" hide-details="auto" class="custom-input"
-                type="password" placeholder="Nhập mật khẩu..."></v-text-field>
-            </v-col>
-          </v-row>
+      <v-form ref="formRef">
+        <v-row>
+          <v-col cols="1"></v-col>
+          <v-col cols="10">
+            <v-row>
+              <v-col>
+                <label v-if="!isLogin" class="input-label text-common">Tên người dùng</label>
+                <v-text-field v-if="!isLogin" v-model="fullName" :rules="fullNameRules" variant="outlined"
+                  hide-details="auto" class="custom-input" placeholder="Nhập họ và tên..."></v-text-field>
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col>
+                <label class="input-label text-common">Email</label>
+                <v-text-field v-model="email" variant="outlined" :rules="emailRules" hide-details="auto"
+                  class="custom-input" placeholder="Nhập email..."></v-text-field>
+              </v-col>
+            </v-row>
+            <v-row class="mb-4">
+              <v-col>
+                <label class="input-label text-common">Mật khẩu</label>
+                <v-text-field v-model="password" :rules="passwordRules" variant="outlined" hide-details="auto"
+                  class="custom-input" type="password" placeholder="Nhập mật khẩu..."></v-text-field>
+              </v-col>
+            </v-row>
 
-          <!-- Forgot -->
-          <div v-if="isLogin" class="text-caption text-common mb-4">
-            Bạn quên mật khẩu? Hãy bấm
-            <a href="#" class="text-green">tại đây</a>
-          </div>
+            <!-- Forgot -->
+            <div v-if="isLogin" class="text-caption text-common mb-4">
+              Bạn quên mật khẩu? Hãy bấm
+              <a href="#" class="text-green">tại đây</a>
+            </div>
 
-          <!-- Submit -->
-          <v-btn @click="submitForm()" block color="#029d16" size="large">
-            {{ isLogin ? "ĐĂNG NHẬP" : "ĐĂNG KÝ" }}
-          </v-btn>
-        </v-col>
-        <v-col cols="1"></v-col>
-      </v-row>
-
+            <!-- Submit -->
+            <v-btn @click="submitForm()" block color="#029d16" size="large">
+              {{ isLogin ? "ĐĂNG NHẬP" : "ĐĂNG KÝ" }}
+            </v-btn>
+          </v-col>
+          <v-col cols="1"></v-col>
+        </v-row>
+      </v-form>
       <!-- Switch -->
       <div class="text-center my-4 text-caption">
         <template v-if="isLogin">
@@ -89,6 +90,21 @@ import { userApi } from "../composables/userInfo";
 import MessageDialog from "./MessageDialog.vue";
 import { useLocalStorage } from "@vueuse/core";
 
+//validate 
+const fullNameRules = [
+  (v: any) => !!v || 'Tên người dùng không được để trống',
+  (v: string | any[]) => (v && v.length <= 100) || 'Tên người dùng không được quá 100 ký tự'
+]
+const emailRules = [
+  (v: any) => !!v || 'Email không được để trống',
+  (v: string) => /.+@.+\..+/.test(v) || 'Email không đúng định dạng'
+]
+const passwordRules = [
+  (v: any) => !!v || 'Mật khẩu không được để trống',
+  (v: string | any[]) => (v && v.length >= 6 && v.length <= 12)
+    || 'Mật khẩu phải từ 6 đến 12 ký tự'
+]
+
 const { loginBuyer } = authLoginApi();
 const auth = useAuthStore();
 const { getMe } = userApi();
@@ -116,7 +132,6 @@ const registerBuyer = async () => {
   try {
     const { registerBuyer } = authRegisterApi();
     await registerBuyer(registerParam.value);
-    handleRegisterOk();
   } catch (err) {
     handleRegisterError();
   }
@@ -137,13 +152,15 @@ const doLogin = async () => {
     handleDologinError();
   }
 };
-
-const submitForm = () => {
+const formRef = ref<any>(null)
+const submitForm = async () => {
+  const { valid } = await formRef.value.validate();
+  if (!valid) return;
   if (isLogin.value) {
-    doLogin();
+    await doLogin();
   } else {
-    registerBuyer();
-    doLogin();
+    await registerBuyer();
+    await doLogin();
   }
 };
 const showMessage = ref<boolean>(false);
@@ -158,18 +175,13 @@ const handleDologinSucess = async (userMe: any) => {
 };
 const handleDologinError = () => {
   showMessage.value = true;
-  message.value = "Đăng nhập thất bại, tên người dùng hoặc mật khẩu chưa đúng";
+  message.value = "Đăng nhập thất bại, tên người dùng hoặc mật khẩu chưa đúng.";
   isSuccess.value = false;
 };
-const handleRegisterOk = () => {
-  modelValue.value = false;
-  showMessage.value = true;
-  message.value = "Tài khoản đã được đăng ký thành công. Vui lòng bấm OK để tắt và tiến hành đăng nhập."
-  isSuccess.value = true;
-}
+
 const handleRegisterError = () => {
   showMessage.value = true;
-  message.value = "Đăng ký tài khoản thất bại, địa chỉ email hoặc mật khẩu không hợp lệ."
+  message.value = "Đăng ký tài khoản thất bại, địa chỉ email hoặc mật khẩu không hợp lệ hoặc email đã được sử dụng rồi."
   isSuccess.value = false;
 }
 </script>

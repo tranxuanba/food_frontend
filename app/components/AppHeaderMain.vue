@@ -4,33 +4,12 @@
       <div class="">
         <v-img :width="200" aspect-ratio="16/9" contain :src="LogoBaDung" />
       </div>
-      <v-text-field
-        color="green"
-        v-model="keyword"
-        density="compact"
-        label="Tìm kiếm..."
-        variant="outlined"
-        style="max-width: 400px"
-        append-inner-icon="mdi-magnify"
-        hide-details
-        single-line
-        @click:append-inner="onSearch"
-      ></v-text-field>
-      <v-menu
-        open-on-hover
-        location="bottom"
-        offset="4"
-        :open-on-click="false"
-        :close-on-content-click="false"
-      >
+      <v-text-field color="green" v-model="keyword" density="compact" label="Tìm kiếm..." variant="outlined"
+        style="max-width: 400px" append-inner-icon="mdi-magnify" hide-details single-line
+        @click:append-inner="onSearch"></v-text-field>
+      <v-menu open-on-hover location="bottom" offset="4" :open-on-click="false" :close-on-content-click="false">
         <template #activator="{ props }">
-          <v-btn
-            class="text-none"
-            v-bind="props"
-            color="#029d16"
-            variant="flat"
-            @click="shoppingCart"
-          >
+          <v-btn class="text-none" v-bind="props" color="#029d16" variant="flat" @click="shoppingCart">
             <v-icon start>mdi-cart-outline</v-icon>
             Giỏ hàng ({{ totalCount }})
           </v-btn>
@@ -41,8 +20,7 @@
             <v-card-text class="text-common">
               <v-row class="pa-2 d-flex align-center">
                 <v-col>Giỏ hàng trống</v-col>
-              </v-row></v-card-text
-            >
+              </v-row></v-card-text>
           </div>
           <div v-else>
             <v-card-text class="text-common">
@@ -56,36 +34,18 @@
                   </v-row>
                   <v-row class="ps-4 pt-1 d-flex align-center">
                     <v-col cols="5" class="px-0"><span>Số lượng: </span></v-col>
-                    <v-col cols="7" class="px-0"
-                      ><v-number-input
-                        inset
-                        variant="solo-filled"
-                        v-model="item.quantity"
-                        control-variant="split"
-                        elevation="0"
-                        class="no-shadow-number"
-                        hide-details
-                        @update:model-value="
+                    <v-col cols="7" class="px-0"><v-number-input inset variant="solo-filled" v-model="item.quantity"
+                        control-variant="split" elevation="0" class="no-shadow-number" hide-details @update:model-value="
                           (val) => onQuantityChange(item, val)
-                        "
-                        density="compact"
-                      ></v-number-input
-                    ></v-col>
+                        " density="compact"></v-number-input></v-col>
                   </v-row>
-                  <v-row class="pb-1 ps-4"
-                    >Giá:
+                  <v-row class="pb-1 ps-4">Giá:
                     <span class="price">{{
                       formatPrice(item.price)
-                    }}</span></v-row
-                  >
+                    }}</span></v-row>
                 </v-col>
                 <v-col cols="1" class="d-flex align-center p-0">
-                  <v-btn
-                    icon
-                    variant="text"
-                    color="red-lighten-1"
-                    @click="removeFoodInCart(item.cartItemId)"
-                  >
+                  <v-btn icon variant="text" color="red-lighten-1" @click="removeFoodInCart(item.cartItemId)">
                     <v-icon style="font-size: 25px">mdi-close-circle</v-icon>
                   </v-btn>
                 </v-col>
@@ -93,16 +53,8 @@
               </v-row>
             </v-card-text>
             <v-card-actions class="mb-2 d-flex justify-center">
-              <v-btn
-                class="btn-shopping-cart text-none"
-                text="Giỏ hàng"
-                @click="handleShoppingCart"
-              />
-              <v-btn
-                class="btn-payment-cart text-none"
-                text="Thanh toán"
-                @click="handlePayment"
-              />
+              <v-btn class="btn-shopping-cart text-none" text="Giỏ hàng" @click="handleShoppingCart" />
+              <v-btn class="btn-payment-cart text-none" text="Thanh toán" @click="handlePayment" />
             </v-card-actions>
           </div>
         </v-card>
@@ -119,6 +71,7 @@ import { ref } from "vue";
 import { useLocalStorage } from "@vueuse/core";
 import { useCartItemMeList } from "../composables/cartItemMe";
 
+const route = useRoute();
 const { setTotalCount, setCartItemMes, useCartItemMes, totalCount } =
   useCartItemMeList();
 const { setFoods, setSearchFoodName, usePagination } = useFoodList();
@@ -209,6 +162,9 @@ const onSearch = () => {
 watch(useSelectedCategoryId, (newVal) => {
   if (newVal) {
     getFoodList();
+    if (!route.fullPath.includes("food-main")) {
+      navigateTo(`/food-main`);
+    }
   }
 });
 watch(
@@ -239,7 +195,7 @@ function handleShoppingCart() {
   navigateTo(`/shopping-cart`);
 }
 
-function handlePayment() {}
+function handlePayment() { }
 const formatPrice = (price: any) => price.toLocaleString("vi-VN") + "đ";
 </script>
 
