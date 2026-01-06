@@ -61,6 +61,7 @@ function handleShoppingCart() {
 }
 
 function handlePayment() {
+  navigateTo(`/order-page`);
 }
 </script>
 

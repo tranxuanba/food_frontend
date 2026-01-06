@@ -102,7 +102,8 @@ import CartDialog from "../components/CartDialog.vue";
 
 const { setTotalCount, setCartItemMes } = useCartItemMeList();
 const { useFoods, setPagination } = useFoodList();
-const { setUseCategoryes, setSelectedCategoryId } = useCategoryList();
+const { setUseCategoryes, setSelectedCategoryId, useSelectedCategoryId } =
+  useCategoryList();
 const showDialog = ref(false);
 const showCartDialog = ref(false);
 const foodDetail = ref<Record<string, any>>({});
@@ -228,10 +229,17 @@ const getCategoryList = async () => {
     console.error("Fetch food error", err);
   }
 };
-const selectedCategory = ref<number>();
+const selectedCategory = ref<number | null>(
+  useSelectedCategoryId.value ?? null
+);
 watch(selectedCategory, (newVal) => {
   if (newVal) {
-    setSelectedCategoryId(selectedCategory.value);
+    setSelectedCategoryId(selectedCategory.value ?? undefined);
+  }
+});
+watch(useSelectedCategoryId, (newVal) => {
+  if (newVal) {
+    selectedCategory.value = newVal;
   }
 });
 </script>

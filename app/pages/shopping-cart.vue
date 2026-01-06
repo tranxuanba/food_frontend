@@ -63,10 +63,20 @@
         }}</span>
       </div>
       <div class="d-flex gap-3">
-        <v-btn class="text-none" color="#9c9696" variant="flat">
+        <v-btn
+          class="text-none"
+          color="#9c9696"
+          variant="flat"
+          @click="continueShopping()"
+        >
           Tiếp tục mua hàng
         </v-btn>
-        <v-btn color="#029d16" class="ml-2 text-none" variant="flat">
+        <v-btn
+          color="#029d16"
+          class="ml-2 text-none"
+          variant="flat"
+          @click="placeOrder()"
+        >
           Tiến hành đặt hàng
         </v-btn>
       </div>
@@ -206,6 +216,13 @@ const getCategoryList = async () => {
   } catch (err) {
     console.error("Fetch food error", err);
   }
+};
+
+const continueShopping = async () => {
+  await navigateTo("/food-main");
+};
+const placeOrder = () => {
+  navigateTo(`/order-page`);
 };
 </script>
 
