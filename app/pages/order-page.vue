@@ -8,41 +8,68 @@
       </v-row>
       <v-row>
         <v-col cols="6">
-          <v-row><span class="text-common text-bold pl-3">Thông tin nhận hàng</span></v-row>
+          <v-row
+            ><span class="text-common text-bold pl-3"
+              >Thông tin nhận hàng</span
+            ></v-row
+          >
           <v-divider class="my-4" />
           <v-row>
             <v-col>
               <label class="input-label text-common">Tên người nhận</label>
-              <v-text-field v-model="receiveName" variant="outlined" hide-details="auto"></v-text-field>
+              <v-text-field
+                v-model="receiveName"
+                variant="outlined"
+                hide-details="auto"
+              ></v-text-field>
             </v-col>
           </v-row>
           <v-row>
             <v-col>
               <label class="input-label text-common">Email</label>
-              <v-text-field v-model="email" variant="outlined" hide-details="auto" disabled></v-text-field>
+              <v-text-field
+                v-model="email"
+                variant="outlined"
+                hide-details="auto"
+                disabled
+              ></v-text-field>
             </v-col>
           </v-row>
           <v-row>
             <v-col>
               <label class="input-label text-common">Số điện thoại</label>
-              <v-text-field v-model="phoneNumber" variant="outlined" hide-details="auto"></v-text-field>
+              <v-text-field
+                v-model="phoneNumber"
+                variant="outlined"
+                hide-details="auto"
+              ></v-text-field>
             </v-col>
           </v-row>
           <v-row>
             <v-col>
               <label class="input-label text-common">Địa chỉ</label>
-              <v-text-field v-model="address" variant="outlined" hide-details="auto"></v-text-field>
+              <v-text-field
+                v-model="address"
+                variant="outlined"
+                hide-details="auto"
+              ></v-text-field>
             </v-col>
           </v-row>
           <v-row>
             <v-col>
               <label class="input-label text-common">Ghi chú</label>
-              <v-textarea v-model="note" variant="outlined" hide-details="auto"></v-textarea>
+              <v-textarea
+                v-model="note"
+                variant="outlined"
+                hide-details="auto"
+              ></v-textarea>
             </v-col>
           </v-row>
         </v-col>
         <v-col cols="6">
-          <v-row><span class="text-common text-bold pl-3">Vận chuyển</span></v-row>
+          <v-row
+            ><span class="text-common text-bold pl-3">Vận chuyển</span></v-row
+          >
           <v-divider class="my-4" />
           <v-row>
             <v-col>
@@ -51,10 +78,18 @@
           </v-row>
           <v-row>
             <v-col>
-              <v-row class="pt-4"><span class="text-common text-bold pl-3">Phương thức thanh toán</span></v-row>
+              <v-row class="pt-4"
+                ><span class="text-common text-bold pl-3"
+                  >Phương thức thanh toán</span
+                ></v-row
+              >
               <v-divider class="my-4" />
               <div class="payment-custom">
-                <v-checkbox class="text-common" hide-details label="Thanh toán khi giao hàng (COD)"></v-checkbox>
+                <v-checkbox
+                  class="text-common"
+                  hide-details
+                  label="Thanh toán khi giao hàng (COD)"
+                ></v-checkbox>
               </div>
             </v-col>
           </v-row>
@@ -62,12 +97,22 @@
       </v-row>
     </v-col>
     <v-col cols="5">
-      <v-row class="pt-4"><span class="text-common text-bold pl-3">Đơn hàng ({{ totalCount }} sản phẩm)</span></v-row>
+      <v-row class="pt-4"
+        ><span class="text-common text-bold pl-3"
+          >Đơn hàng ({{ totalCount }} sản phẩm)</span
+        ></v-row
+      >
       <v-divider class="my-4" />
       <v-row>
         <v-col>
-          <v-data-table :headers="headers" :items="cartItemList" item-key="id" hide-default-header hide-default-footer
-            class="cart-table">
+          <v-data-table
+            :headers="headers"
+            :items="cartItemList"
+            item-key="id"
+            hide-default-header
+            hide-default-footer
+            class="cart-table"
+          >
             <!-- Cột hình + badge -->
             <template #item.imageUrl="{ item }">
               <div class="image-wrapper">
@@ -94,16 +139,29 @@
       </v-row>
       <v-divider class="my-4" />
       <v-row>
-        <v-col cols="8"><v-text-field v-model="orderVoucher" placeholder="Nhập mã giảm giá" variant="outlined"
-            hide-details="auto"></v-text-field></v-col>
+        <v-col cols="8"
+          ><v-text-field
+            v-model="orderVoucher"
+            placeholder="Nhập mã giảm giá"
+            variant="outlined"
+            hide-details="auto"
+          ></v-text-field
+        ></v-col>
         <v-col cols="4">
-          <v-btn class="btn-shopping-cart text-none" size="x-large" text="Áp dụng" :disabled="orderVoucher == ''" />
+          <v-btn
+            class="btn-shopping-cart text-none"
+            size="x-large"
+            text="Áp dụng"
+            :disabled="orderVoucher == ''"
+          />
         </v-col>
       </v-row>
       <v-divider class="my-4" />
       <v-row class="text-common">
         <v-col cols="6"><span>Tạm tính</span></v-col>
-        <v-col cols="6" class="total-price">{{ formatPrice(totalPrice) }}</v-col>
+        <v-col cols="6" class="total-price">{{
+          formatPrice(totalPrice)
+        }}</v-col>
       </v-row>
       <v-row class="text-common">
         <v-col cols="6"><span>Phí vận chuyển</span></v-col>
@@ -111,18 +169,37 @@
       </v-row>
       <v-divider class="my-4" />
       <v-row class="text-common">
-        <v-col cols="6"><span style="font-size: 20px;">Tổng cộng</span></v-col>
-        <v-col cols="6" class="total-price-final">{{ formatPrice(totalPrice) }}</v-col>
+        <v-col cols="6"><span style="font-size: 20px">Tổng cộng</span></v-col>
+        <v-col cols="6" class="total-price-final">{{
+          formatPrice(totalPrice)
+        }}</v-col>
       </v-row>
       <v-row class="text-common">
-        <v-col cols="6"><v-btn color="rgb(35 163 5)" variant="text" class="text-none" to="/shopping-cart">
+        <v-col cols="6"
+          ><v-btn
+            color="rgb(35 163 5)"
+            variant="text"
+            class="text-none"
+            to="/shopping-cart"
+          >
             <v-icon start icon="mdi-arrow-left" />
             Quay về giỏ hàng
-          </v-btn></v-col>
-        <v-col cols="6" class="total-price"><v-btn class="btn-shopping-cart text-none" text="Đặt hàng" /></v-col>
+          </v-btn></v-col
+        >
+        <v-col cols="6" class="total-price"
+          ><v-btn
+            class="btn-shopping-cart text-none"
+            text="Đặt hàng"
+            @click="order()"
+        /></v-col>
       </v-row>
     </v-col>
   </v-row>
+  <MessageDialog
+    v-model="showMessage"
+    :message="message"
+    :isSuccess="isSuccess"
+  />
 </template>
 
 <script setup lang="ts">
@@ -130,8 +207,11 @@ import { ref, onMounted } from "vue";
 import LogoBaDung from "@/assets/images/logo-ba-dung.png";
 import { useLocalStorage } from "@vueuse/core";
 
+const showMessage = ref<boolean>(false);
+const message = ref<string>("");
+const isSuccess = ref<boolean>(false);
 const userStorage = useLocalStorage<any>("user_me", "");
-const userInfo = JSON.parse(userStorage.value || '{}');
+const userInfo = JSON.parse(userStorage.value || "{}");
 const receiveName = ref<string>("");
 const email = ref<string>("");
 const phoneNumber = ref<string>("");
@@ -140,12 +220,9 @@ const note = ref<string>("");
 const totalCount = ref<number>(0);
 const orderVoucher = ref<string>("");
 const getUserId = () => {
-  const userId = computed(
-    () => userInfo?.userId ?? ""
-  );
+  const userId = computed(() => userInfo?.userId ?? "");
   receiveName.value = userInfo.username;
   email.value = userInfo.email;
-  console.log(email.value)
   return userId.value;
 };
 
@@ -178,6 +255,43 @@ onMounted(async () => {
 });
 
 const formatPrice = (v: number) => v.toLocaleString("vi-VN") + "đ";
+
+const cartMeOrderList = computed(() =>
+  cartItemList.value.map((item) => ({
+    foodId: item.foodId,
+    cartItemId: item.cartItemId,
+    quantity: item.quantity,
+    price: item.price,
+  }))
+);
+
+const callOrderCreateApi = async () => {
+  const createParam: any = {
+    userId: getUserId(),
+    receiverName: receiveName.value,
+    addressDetail: address.value,
+    phone: phoneNumber.value,
+    paymentMethod: "0",
+    paymentStatus: "0",
+    totalAmount: totalPrice.value,
+    cartMeOrderList: cartMeOrderList.value,
+  };
+  try {
+    const orderMeCreate = orderMeCreateApi();
+    await orderMeCreate(createParam);
+    showMessage.value = true;
+    message.value = "Đặt hàng thành công";
+    isSuccess.value = true;
+  } catch (err) {
+    showMessage.value = false;
+    message.value = "Đặt hàng thất bại";
+    isSuccess.value = false;
+  }
+};
+
+const order = () => {
+  callOrderCreateApi();
+};
 </script>
 
 <style scoped>
