@@ -7,11 +7,7 @@
         </v-sheet>
         <v-card-text>
           <v-radio-group v-model="selectedCategory">
-            <v-radio
-              v-for="item in categories"
-              :label="item.categoryName"
-              :value="item.categoryId"
-            />
+            <v-radio v-for="item in categories" :label="item.categoryName" :value="item.categoryId" />
           </v-radio-group>
         </v-card-text>
       </v-card>
@@ -19,12 +15,7 @@
     <v-col>
       <v-row class="food-cart pt-3 pr-3">
         <v-col class="pa-0" v-for="item in useFoods" :key="item.foodId">
-          <v-card
-            class="product-card"
-            elevation="0"
-            variant="outlined"
-            rounded="lg"
-          >
+          <v-card class="product-card" elevation="0" variant="outlined" rounded="lg">
             <v-img :src="item.imageUrl" aspect-ratio="1" cover />
 
             <v-card-text class="text-center pt-3">
@@ -40,21 +31,12 @@
               <v-spacer />
 
               <!-- Xem chi tiết -->
-              <v-btn
-                icon
-                variant="text"
-                @click="showProductDialog(item.foodId)"
-              >
+              <v-btn icon variant="text" @click="showProductDialog(item.foodId)">
                 <v-icon>mdi-eye-outline</v-icon>
               </v-btn>
 
               <!-- Thêm giỏ -->
-              <v-btn
-                icon
-                variant="text"
-                color="success"
-                @click="addToCart(item)"
-              >
+              <v-btn icon variant="text" color="success" @click="addToCart(item)">
                 <v-icon>mdi-cart-plus</v-icon>
               </v-btn>
             </v-card-actions>
@@ -62,25 +44,15 @@
         </v-col>
       </v-row>
       <v-row>
-        <Pagination
-          v-model:pagination="pagination"
-          :totalItems="totalItems"
-          @update:pagination="handlePaginationUpdate"
-        />
+        <Pagination v-model:pagination="pagination" :totalItems="totalItems"
+          @update:pagination="handlePaginationUpdate" />
       </v-row>
     </v-col>
   </v-row>
   <div class="category-page"></div>
   <ProductDialog v-model="showDialog" :food_info="foodDetail" />
-  <CartDialog
-    v-model="showCartDialog"
-    :foodName="foodNameCart"
-    :imageUrl="imageUrlCart"
-    :price="priceCart"
-    :foodId="foodIdCart"
-    :userId="userId"
-    :totalCount="totalCount"
-  />
+  <CartDialog v-model="showCartDialog" :foodName="foodNameCart" :imageUrl="imageUrlCart" :price="priceCart"
+    :foodId="foodIdCart" :userId="userId" :totalCount="totalCount" />
   <ConfirmLoginDialog v-model="confirmLogin" />
 </template>
 
@@ -182,7 +154,7 @@ const getTotalCount = async () => {
     try {
       const { cartItemMeList } = cartItemMeListApi();
       cartItemList.value = await cartItemMeList(cartParam);
-      totalCount.value = cartItemList.value[0].totalCount ?? 0;
+      totalCount.value = cartItemList.value[0]?.totalCount ?? 0;
       setCartItemMes(cartItemList.value);
       setTotalCount(totalCount.value);
     } catch (err) {
@@ -268,6 +240,7 @@ watch(useSelectedCategoryId, (newVal) => {
   transition: 0.2s ease;
   border: 1px solid #eee;
 }
+
 .food-cart {
   display: grid;
   grid-template-columns: repeat(5, 1fr);

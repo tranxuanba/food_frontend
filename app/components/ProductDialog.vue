@@ -99,7 +99,6 @@ const modelValue = computed(() => props.modelValue);
 
 const stockInfo = computed(() => {
   const isInStock = foodInfo.value?.status === "0";
-  console.log(foodInfo.value?.status);
 
   return {
     color: isInStock ? "green" : "grey",

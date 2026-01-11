@@ -28,7 +28,7 @@
       </v-btn>
       <v-btn class="text-none" v-if="loginOk == true" @click="logoutClick()" variant="text" size="small">
         <v-icon start>mdi-logout</v-icon>
-        Logout
+        Đăng xuất
       </v-btn>
     </div>
   </div>
@@ -73,9 +73,7 @@ const logoutClick = async () => {
   loginOk.value = false;
   auth.clear();
   userStorage.value = "";
-  if (!route.fullPath.includes("food-main")) {
-    await navigateTo(`/food-main`);
-  }
+  await navigateTo(`/food-main`);
   window.location.reload();
 };
 </script>

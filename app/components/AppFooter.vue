@@ -20,7 +20,7 @@
         <v-col cols="3">
           <v-list bg-color="#029d16">
             <v-list-subheader class="text-footer">DANH MỤC SẢN PHẨM</v-list-subheader>
-            <v-list-item v-for="(item, i) in categoryItems" :key="i" :value="item.categoryId" color="primary">
+            <v-list-item v-for="(item, i) in categoryItems" :key="i" :value="item.categoryId" color="primary" @click="onClickCategory(item.categoryId)">
               <template #prepend>
                 <v-icon icon="mdi-circle" size="10" color="white" />
               </template>
@@ -67,7 +67,7 @@
 import { useCategoryList } from "../composables/categoryList";
 
 // lấy danh sách category
-const { useCategoryes } = useCategoryList();
+const { useCategoryes, setSelectedCategoryId } = useCategoryList();
 
 const year = new Date().getFullYear();
 const baDungItems = [
@@ -85,6 +85,9 @@ const supportItems = [
   { text: "Chính sách cho cộng tác viên" },
 ];
 const aboutUsItems = [{ text: "Giới thiệu" }, { text: "Tầm nhìn & Sứ mệnh" }];
+const onClickCategory = async (categoryId: any) => {
+  setSelectedCategoryId(categoryId);
+};
 </script>
 <style scoped>
 .text-footer {

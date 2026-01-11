@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="visible" max-width="500" persistent>
+  <v-dialog v-model="messageDialog" max-width="500" persistent>
     <v-card>
       <v-card-text class="text-common">
         {{ message }}
@@ -13,20 +13,29 @@
 </template>
 
 <script setup lang="ts">
-const visible = defineModel<boolean>({ required: true });
+import { useLocalStorage } from "@vueuse/core";
+
+const messageDialog = defineModel<boolean>({ required: true });
 const props = defineProps<{
   message: string;
   isSuccess?: boolean;
 }>();
 
-const emit = defineEmits(["update:visible"]);
-
+const emit = defineEmits(["update:messageDialog"]);
+const userStorage = useLocalStorage<any>("user_me", "");
+const useRoleName = computed(
+  () => JSON.parse(userStorage.value || "{}")?.roleName ?? ""
+);
 async function handleOk() {
   if (props.isSuccess) {
-    await navigateTo(`/food-main`);
+    if (useRoleName.value == 'ADMIN') {
+      await navigateTo(`/admin-food-category`);
+    } else {
+      await navigateTo(`/food-main`);
+    }
     window.location.reload();
   }
-  visible.value = false;
+  messageDialog.value = false;
 }
 </script>
 

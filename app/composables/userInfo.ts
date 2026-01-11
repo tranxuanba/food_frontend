@@ -2,9 +2,7 @@ export interface UserProfileResponse {
   userId: number;
   email: string;
   username: string;
-  phone: string;
   roleName: string;
-  status: string;
 }
 
 import type { FetchOptions } from "ofetch";
@@ -28,7 +26,6 @@ export const useApiFetch = <T>(
 ) => {
   const config = useRuntimeConfig();
   const token = useCookie<string | null>("auth_token");
-  console.log(token.value);
 
   return $fetch<T>(`${config.public.apiBase}${url}`, {
     method: options.method ?? "POST",

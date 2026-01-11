@@ -5,13 +5,6 @@ export interface LoginRequest {
 }
 
 export interface UserLoginResponse {
-  email: string;
-  fullName: string;
-  passwordHash: string;
-  userId: number;
-  phone: string;
-  status: string;
-  roleName: string;
   token: string;
 }
 

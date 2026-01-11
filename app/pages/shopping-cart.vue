@@ -2,12 +2,13 @@
   <v-container>
     <!-- Data table -->
     <v-card elevation="0">
-      <v-data-table
-        :headers="headers"
-        :items="cartItemList"
-        item-key="id"
-        hide-default-footer
-      >
+      <v-data-table :headers="headers" :items="cartItemList" item-key="id" hide-default-footer>
+        <!-- No data -->
+        <template #no-data>
+          <div class="text-center py-6 text-common">
+            Giỏ hàng của bạn đang trống
+          </div>
+        </template>
         <!-- Image -->
         <template #item.imageUrl="{ item }">
           <v-img :src="item.imageUrl" width="80" height="80" cover />
@@ -20,17 +21,9 @@
 
         <!-- Quantity -->
         <template #item.quantity="{ item }">
-          <v-number-input
-            inset
-            variant="solo-filled"
-            v-model="item.quantity"
-            control-variant="split"
-            elevation="0"
-            class="no-shadow-number"
-            hide-details
-            @update:model-value="(val) => onQuantityChange(item, val)"
-            density="compact"
-          ></v-number-input>
+          <v-number-input inset variant="solo-filled" v-model="item.quantity" control-variant="split" elevation="0"
+            class="no-shadow-number" hide-details @update:model-value="(val) => onQuantityChange(item, val)"
+            density="compact"></v-number-input>
         </template>
 
         <!-- Total -->
@@ -42,12 +35,7 @@
 
         <!-- Delete -->
         <template #item.actions="{ item }">
-          <v-btn
-            icon
-            variant="text"
-            color="red-lighten-1"
-            @click="removeFoodInCart(item.cartItemId)"
-          >
+          <v-btn icon variant="text" color="red-lighten-1" @click="removeFoodInCart(item.cartItemId)">
             <v-icon>mdi-delete</v-icon>
           </v-btn>
         </template>
@@ -57,26 +45,15 @@
     <!-- Footer -->
     <div class="d-flex justify-space-between align-center mt-6">
       <div>
-        <span class="mr-2 text-common">Tổng tiền:</span
-        ><span class="font-weight-bold price">{{
+        <span class="mr-2 text-common">Tổng tiền:</span><span class="font-weight-bold price">{{
           formatPrice(totalPrice)
         }}</span>
       </div>
       <div class="d-flex gap-3">
-        <v-btn
-          class="text-none"
-          color="#9c9696"
-          variant="flat"
-          @click="continueShopping()"
-        >
+        <v-btn class="text-none" color="#9c9696" variant="flat" @click="continueShopping()">
           Tiếp tục mua hàng
         </v-btn>
-        <v-btn
-          color="#029d16"
-          class="ml-2 text-none"
-          variant="flat"
-          @click="placeOrder()"
-        >
+        <v-btn color="#029d16" class="ml-2 text-none" variant="flat" @click="placeOrder()">
           Tiến hành đặt hàng
         </v-btn>
       </div>
@@ -269,16 +246,23 @@ const placeOrder = () => {
 ::v-deep(.v-data-table td) {
   border-left: 1px solid #eee;
 }
+
 ::v-deep(.v-data-table th) {
   border-top: 1px solid #eee;
 }
+
 ::v-deep(.v-data-table td) {
   border-bottom: 1px solid #eee;
   padding-top: 10px !important;
   padding-bottom: 10px !important;
 }
+
 ::v-deep(.v-data-table thead tr th:last-child),
 ::v-deep(.last-column) {
+  border-right: 1px solid #eee !important;
+}
+
+::v-deep(.v-data-table-rows-no-data td) {
   border-right: 1px solid #eee !important;
 }
 </style>

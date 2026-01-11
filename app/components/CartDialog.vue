@@ -45,7 +45,7 @@ const props = defineProps<{
   imageUrl: string;
   price: string;
   foodId: number;
-  userId: string;
+  userId: string | number;
   totalCount: number;
 }>();
 const emit = defineEmits(["update:visible"]);

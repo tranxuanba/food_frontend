@@ -2,7 +2,7 @@
   <v-dialog persistent :model-value="modelValue" max-width="600" @update:modelValue="emit('update:modelValue', $event)">
     <v-card>
       <v-card-title class="modal-title-custom text-white d-flex align-center justify-space-between">
-        {{ isLogin ? "ĐĂNG NHẬP TÀI KHOẢN" : "ĐĂNG KÝ TÀI KHOẢN" }}
+        {{ isLogin ? "Đăng nhập tài khoản" : "Đăng ký tài khoản" }}
         <v-btn icon @click="modelValue = false" variant="text">
           <v-icon class="text-white">mdi-close</v-icon>
         </v-btn>
@@ -30,21 +30,21 @@
               <v-col>
                 <label v-if="!isLogin" class="input-label text-common">Tên người dùng</label>
                 <v-text-field v-if="!isLogin" v-model="fullName" :rules="fullNameRules" variant="outlined"
-                  hide-details="auto" class="custom-input" placeholder="Nhập họ và tên..."></v-text-field>
+                  hide-details="auto" placeholder="Nhập họ và tên..."></v-text-field>
               </v-col>
             </v-row>
             <v-row>
               <v-col>
                 <label class="input-label text-common">Email</label>
                 <v-text-field v-model="email" variant="outlined" :rules="emailRules" hide-details="auto"
-                  class="custom-input" placeholder="Nhập email..."></v-text-field>
+                  placeholder="Nhập email..."></v-text-field>
               </v-col>
             </v-row>
             <v-row class="mb-4">
               <v-col>
                 <label class="input-label text-common">Mật khẩu</label>
                 <v-text-field v-model="password" :rules="passwordRules" variant="outlined" hide-details="auto"
-                  class="custom-input" type="password" placeholder="Nhập mật khẩu..."></v-text-field>
+                  type="password" placeholder="Nhập mật khẩu..."></v-text-field>
               </v-col>
             </v-row>
 
@@ -56,7 +56,7 @@
 
             <!-- Submit -->
             <v-btn @click="submitForm()" block color="#029d16" size="large">
-              {{ isLogin ? "ĐĂNG NHẬP" : "ĐĂNG KÝ" }}
+              {{ isLogin ? "Đăng nhập" : "Đăng ký" }}
             </v-btn>
           </v-col>
           <v-col cols="1"></v-col>
@@ -146,7 +146,6 @@ const doLogin = async () => {
     const res = await loginBuyer(loginParam.value);
     auth.setToken(res.token);
     const userMe = await getMe(res.token);
-    console.log(userMe)
     handleDologinSucess(userMe);
   } catch (err) {
     handleDologinError();
