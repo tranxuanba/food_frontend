@@ -74,3 +74,36 @@ export const useFoodList = () => {
     setPagination,
   };
 };
+
+export interface FoodInsertRequest {
+  categoryId: number;
+  foodName: string;
+  description: string;
+  price: number;
+  quantity: number;
+  status: string;
+  foodImage: File;
+}
+
+export const addFoodApi = () => {
+  const config = useRuntimeConfig();
+  return async (params: FoodInsertRequest): Promise<void> => {
+    const form = new FormData();
+    Object.entries(params).forEach(([key, value]) => {
+      if (value !== undefined && value !== null && value !== "") {
+        if (value instanceof File) {
+          form.append(key, value);
+        } else {
+          form.append(key, String(value));
+        }
+      }
+    });
+    await $fetch(
+      `${config.public.apiBase}/insert-food`,
+      {
+        method: "POST",
+        body: form,
+      }
+    );
+  };
+};
