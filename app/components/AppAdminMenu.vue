@@ -10,7 +10,7 @@
 <script setup lang="ts">
 const menus = computed(() => [
   { title: "Danh mục category", to: "/admin-food-category" },
-  { title: "Danh mục sản phẩm", to: "" },
+  { title: "Danh mục sản phẩm", to: "/admin-food" },
   { title: "Danh sách đơn đã đặt", to: "" },
 ]);
 

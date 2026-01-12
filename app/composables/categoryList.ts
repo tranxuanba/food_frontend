@@ -13,6 +13,16 @@ export interface FoodCategoryAddRequest {
   parentCategoryId?: number;
 }
 
+export interface FoodCategoryUpdateRequest {
+  categoryId: number;
+  categoryName: string;
+  parentCategoryId?: number;
+}
+
+export interface FoodCategoryDeleteRequest {
+  categoryId: number;
+}
+
 export const categoryListApi = () => {
   const config = useRuntimeConfig();
 
@@ -71,6 +81,40 @@ export const addCategoryApi = () => {
   return async (payload: FoodCategoryAddRequest): Promise<void> => {
     await $fetch(
       `${config.public.apiBase}/food-categorys/add`,
+      {
+        method: "POST",
+        body: payload,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+  };
+};
+
+export const updateCategoryApi = () => {
+  const config = useRuntimeConfig();
+
+  return async (payload: FoodCategoryUpdateRequest): Promise<void> => {
+    await $fetch(
+      `${config.public.apiBase}/food-categorys/update`,
+      {
+        method: "POST",
+        body: payload,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+  };
+};
+
+export const deleteCategoryApi = () => {
+  const config = useRuntimeConfig();
+
+  return async (payload: FoodCategoryDeleteRequest): Promise<void> => {
+    await $fetch(
+      `${config.public.apiBase}/food-categorys/delete`,
       {
         method: "POST",
         body: payload,

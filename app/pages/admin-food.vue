@@ -1,35 +1,70 @@
 <template>
   <v-container>
     <v-card elevation="0">
-      <v-row class="px-3 pb-6 pt-4">
-        <v-text-field
-          color="green"
-          v-model="keyword"
-          density="compact"
-          label="Tìm kiếm theo tên loại sản phẩm"
-          variant="outlined"
-          style="max-width: 400px"
-          append-inner-icon="mdi-magnify"
-          hide-details
-          single-line
-          @click:append-inner="onSearch"
-        ></v-text-field>
+      <v-row>
+        <v-col cols="3">
+          <v-text-field
+            color="green"
+            v-model="keyword"
+            density="compact"
+            label="Tìm kiếm theo tên loại sản phẩm"
+            variant="outlined"
+            hide-details
+            single-line
+          ></v-text-field>
+        </v-col>
+        <v-col cols="3"
+          ><v-select
+            color="green"
+            :items="categories"
+            item-title="categoryName"
+            item-value="categoryId"
+            variant="outlined"
+            density="compact"
+            v-model="selectCategoryId"
+            single-line
+            label="Tìm theo loại sản phẩm"
+          ></v-select
+        ></v-col>
+        <v-col cols="1"
+          ><v-btn
+            color="#029d16"
+            class="ml-2 text-none"
+            variant="flat"
+            @click="onSearch()"
+          >
+            Tìm kiếm
+          </v-btn></v-col
+        >
       </v-row>
       <v-data-table
         :headers="headers"
-        :items="categories"
+        :items="foods"
         item-key="id"
         hide-default-footer
       >
         <template #no-data>
           <div class="text-center py-6 text-common">
-            Danh sách loại sản phẩm đang trống
+            Danh sách sản phẩm đang trống
           </div>
         </template>
-        <template #item.categoryName="{ item }">
-          <a class="cursor-pointer" @click.prevent="selectCategory(item)">
-            {{ item.categoryName }}
+        <template #item.imageUrl="{ item }">
+          <v-img :src="item.imageUrl" width="80" height="80" cover />
+        </template>
+        <template #item.foodName="{ item }">
+          <a class="cursor-pointer" @click.prevent="selectFood(item)">
+            {{ item.foodName }}
           </a>
+        </template>
+        <template #item.price="{ item }">
+          <span class="price">
+            {{ formatPrice(item.price) }}
+          </span>
+        </template>
+        <template #item.status="{ item }">
+          <span class="price">
+            {{ item.status == '0' ? 'còn hàng' : 'hết hàng' }}
+          </span>
         </template>
         <template #item.actions="{ item }">
           <v-btn
@@ -42,6 +77,11 @@
           </v-btn>
         </template>
       </v-data-table>
+      <Pagination
+        v-model:pagination="pagination"
+        :totalItems="foods[0]?.totalCount"
+        @update:pagination="handlePaginationUpdate"
+      />
     </v-card>
 
     <div class="items-right mt-6">
@@ -49,7 +89,7 @@
         color="#029d16"
         class="ml-2 text-none"
         variant="flat"
-        @click="addFoodCategory()"
+        @click="addFood()"
       >
         Thêm loại sản phẩm
       </v-btn>
@@ -127,36 +167,92 @@
 import { ref, onMounted } from "vue";
 
 const { searchCategoryList } = searchCategoryListApi();
+
 // lấy danh sách category
 const categories = ref<any[]>([]);
 const getCategoryList = async () => {
-  const loginParam = ref({
-    categoryName: keyword.value,
+  const categoryParam = ref({
+    categoryName: "",
   });
   try {
-    categories.value = await searchCategoryList(loginParam.value);
+    categories.value = await searchCategoryList(categoryParam.value);
   } catch (err) {
     console.error("Lỗi phía server đã xảy ra sự cố", err);
   }
 };
 
+const foods = ref<any[]>([]);
+const getFoodList = async (pagination: any) => {
+  const searchForm: any = {
+    categoryId: selectCategoryId.value ?? null,
+    foodName: keyword.value,
+    limit: pagination.limit ?? 10,
+    offset: pagination.offset ?? 0,
+  };
+  try {
+    const { foodList } = foodListApi();
+    foods.value = await foodList(searchForm);
+  } catch (err) {
+    console.error("Fetch food error", err);
+  }
+};
+const pagination = ref<any>({
+  page: 1,
+  limit: 10,
+  offset: 0,
+});
+const handlePaginationUpdate = async (pagination: any) => {
+  getFoodList(pagination);
+};
+
 const keyword = ref("");
+const selectCategoryId = ref<number>();
 const onSearch = () => {
-  getCategoryList();
+  getFoodList(pagination.value);
 };
 
 onMounted(async () => {
   getCategoryList();
+  getFoodList(pagination.value);
 });
 const headers = [
   {
-    title: "Id loại sản phẩm",
-    key: "categoryId",
+    title: "",
+    key: "imageUrl",
+  },
+  {
+    title: "Id",
+    key: "foodId",
     headerProps: { class: "font-weight-bold text-common" },
   },
   {
-    title: "Tên sản phẩm",
+    title: "Tên",
+    key: "foodName",
+    headerProps: { class: "font-weight-bold text-common" },
+  },
+  {
+    title: "Tên loại",
     key: "categoryName",
+    headerProps: { class: "font-weight-bold text-common" },
+  },
+  {
+    title: "Số lượng",
+    key: "quantity",
+    headerProps: { class: "font-weight-bold text-common" },
+  },
+  {
+    title: "Giá",
+    key: "price",
+    headerProps: { class: "font-weight-bold text-common" },
+  },
+  {
+    title: "Trạng thái",
+    key: "status",
+    headerProps: { class: "font-weight-bold text-common" },
+  },
+  {
+    title: "Mô tả",
+    key: "description",
     headerProps: { class: "font-weight-bold text-common" },
   },
   {
@@ -177,7 +273,7 @@ const message = ref<string>("");
 const messageDialog = ref<boolean>(false);
 const isSuccess = ref<boolean>(false);
 
-const addFoodCategory = async () => {
+const addFood = async () => {
   categoryName.value = "";
   isUpdateCategory.value = false;
   categoryDialog.value = true;
@@ -199,7 +295,7 @@ const addFoodCategoryApi = async () => {
   }
 };
 
-const selectCategory = (item: any) => {
+const selectFood = (item: any) => {
   categoryId.value = item.categoryId;
   categoryName.value = item.categoryName;
   isUpdateCategory.value = true;
@@ -263,6 +359,7 @@ const categoryNameRules = [
   (v: string | any[]) =>
     (v && v.length <= 100) || "Tên sản phẩm không được quá 100 ký tự",
 ];
+const formatPrice = (v: number) => v.toLocaleString("vi-VN") + "đ";
 </script>
 
 <style scoped>

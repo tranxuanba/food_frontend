@@ -5,6 +5,10 @@ export interface FoodSearchRequest {
 export interface FoodListResponse {
   foodId: number;
   foodName: string;
+  categoryId: number;
+  description: string;
+  quantity: number;
+  status: string;
   price: number;
   imageUrl: string;
   totalCount: number;
