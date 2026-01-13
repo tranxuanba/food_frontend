@@ -98,12 +98,64 @@ export const addFoodApi = () => {
         }
       }
     });
-    await $fetch(
-      `${config.public.apiBase}/insert-food`,
-      {
-        method: "POST",
-        body: form,
+    await $fetch(`${config.public.apiBase}/insert-food`, {
+      method: "POST",
+      body: form,
+    });
+  };
+};
+
+export interface FoodUpdateRequest {
+  foodId: number;
+  categoryId: number;
+  foodName: string;
+  description: string;
+  price: number;
+  quantity: number;
+  status: string;
+  foodImage: File;
+}
+
+export const updateFoodApi = () => {
+  const config = useRuntimeConfig();
+  return async (params: FoodUpdateRequest): Promise<void> => {
+    const form = new FormData();
+    Object.entries(params).forEach(([key, value]) => {
+      if (value !== undefined && value !== null && value !== "") {
+        if (value instanceof File) {
+          form.append(key, value);
+        } else {
+          form.append(key, String(value));
+        }
       }
-    );
+    });
+    await $fetch(`${config.public.apiBase}/update-food`, {
+      method: "POST",
+      body: form,
+    });
+  };
+};
+
+export interface FoodDeleteRequest {
+  foodId: number;
+}
+
+export const deleteFoodApi = () => {
+  const config = useRuntimeConfig();
+  return async (params: FoodDeleteRequest): Promise<void> => {
+    const form = new FormData();
+    Object.entries(params).forEach(([key, value]) => {
+      if (value !== undefined && value !== null && value !== "") {
+        if (value instanceof File) {
+          form.append(key, value);
+        } else {
+          form.append(key, String(value));
+        }
+      }
+    });
+    await $fetch(`${config.public.apiBase}/delete-food`, {
+      method: "POST",
+      body: form,
+    });
   };
 };

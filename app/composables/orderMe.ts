@@ -27,3 +27,58 @@ export const orderMeCreateApi = () => {
   };
 };
 
+export interface OrderSearchRequest {
+  transactionCode: string;
+  paymentStatus: string;
+  limit: number;
+  offset: number;
+}
+
+export interface OrderSearchResponse {
+  orderId: number;
+  totalAmount: number;
+  createdAt: string;
+  paymentMethod: string;
+  paymentStatus: string;
+  transactionCode: string;
+  orderFoodName: string;
+  receiverName: string;
+  phone: string;
+  addressDetail: string;
+  totalCount: number;
+}
+
+export const searchOrderListApi = () => {
+  const config = useRuntimeConfig();
+
+  const searchOrderList = async (payload: OrderSearchRequest) => {
+    return await $fetch<OrderSearchResponse[]>(
+      `${config.public.apiBase}/order-list`,
+      {
+        method: "POST",
+        body: payload,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+  };
+
+  return { searchOrderList };
+};
+
+export interface OrderUpdatePaymentStatusRequest {
+  orderId: number;
+  paymentStatus: string;
+}
+
+export const orderPaymenStatusUpdateApi = () => {
+  const config = useRuntimeConfig();
+
+  return async (params: OrderUpdatePaymentStatusRequest): Promise<void> => {
+    await $fetch(`${config.public.apiBase}/order-payment-status-update`, {
+      method: "POST",
+      body: params, // 🔥 gửi JSON
+    });
+  };
+};
