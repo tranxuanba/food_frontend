@@ -14,7 +14,7 @@
         <v-divider class="my-4" />
         <v-row>
           <v-col cols="4">
-            <v-img :src="imageUrl" aspect-ratio="1" cover />
+            <v-img :src="imageUrl" aspect-ratio="1" contain />
           </v-col>
           <v-col cols="8">
             <v-row class="pa-4 food-title">{{ foodName }}</v-row>

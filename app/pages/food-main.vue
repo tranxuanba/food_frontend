@@ -6,25 +6,15 @@
           Danh mục
         </v-sheet>
         <v-card-text>
-          <v-checkbox
-            v-for="item in categories"
-            :key="item.categoryId"
-            v-model="selectedCategories"
-            :label="item.categoryName"
-            :value="item.categoryId"
-          />
+          <v-checkbox v-for="item in categories" :key="item.categoryId" v-model="selectedCategories"
+            :label="item.categoryName" :value="item.categoryId" hide-details />
         </v-card-text>
       </v-card>
     </v-col>
     <v-col>
       <v-row class="food-cart pt-3 pr-3">
         <v-col class="pa-0" v-for="item in useFoods" :key="item.foodId">
-          <v-card
-            class="product-card"
-            elevation="0"
-            variant="outlined"
-            rounded="lg"
-          >
+          <v-card class="product-card" elevation="0" variant="outlined" rounded="lg">
             <v-img :src="item.imageUrl" aspect-ratio="1" contain />
             <v-card-text class="text-center pt-3">
               <v-tooltip activator="parent" location="top">
@@ -39,19 +29,10 @@
                 {{ formatPrice(item.price) }}
               </div>
               <v-spacer />
-              <v-btn
-                icon
-                variant="text"
-                @click="showProductDialog(item.foodId)"
-              >
+              <v-btn icon variant="text" @click="showProductDialog(item.foodId)">
                 <v-icon>mdi-eye-outline</v-icon>
               </v-btn>
-              <v-btn
-                icon
-                variant="text"
-                color="success"
-                @click="addToCart(item)"
-              >
+              <v-btn icon variant="text" color="success" @click="addToCart(item)">
                 <v-icon>mdi-cart-plus</v-icon>
               </v-btn>
             </v-card-actions>
@@ -59,25 +40,15 @@
         </v-col>
       </v-row>
       <v-row>
-        <Pagination
-          v-model:pagination="pagination"
-          :totalItems="totalItems"
-          @update:pagination="handlePaginationUpdate"
-        />
+        <Pagination v-model:pagination="pagination" :totalItems="totalItems"
+          @update:pagination="handlePaginationUpdate" />
       </v-row>
     </v-col>
   </v-row>
   <div class="category-page"></div>
   <ProductDialog v-model="showDialog" :food_info="foodDetail" />
-  <CartDialog
-    v-model="showCartDialog"
-    :foodName="foodNameCart"
-    :imageUrl="imageUrlCart"
-    :price="priceCart"
-    :foodId="foodIdCart"
-    :userId="userId"
-    :totalCount="totalCount"
-  />
+  <CartDialog v-model="showCartDialog" :foodName="foodNameCart" :imageUrl="imageUrlCart" :price="priceCart"
+    :foodId="foodIdCart" :userId="userId" :totalCount="totalCount" />
   <ConfirmLoginDialog v-model="confirmLogin" />
 </template>
 
@@ -226,13 +197,15 @@ const getCategoryList = async () => {
 };
 const selectedCategories = ref<number[]>(useSelectedCategories.value ?? []);
 watch(selectedCategories, (newVal) => {
-  if (newVal.length != 0) {
+  if (!newVal) {
+    setSelectedCategories([]);
+  } else {
     setSelectedCategories(newVal ?? []);
   }
 });
 watch(useSelectedCategories, (newVal) => {
   if (newVal) {
-    useSelectedCategories.value = newVal;
+    selectedCategories.value = newVal;
   }
 });
 </script>
@@ -271,6 +244,7 @@ watch(useSelectedCategories, (newVal) => {
 .text-green {
   color: #029d16;
 }
+
 .text-ellipsis {
   white-space: nowrap;
   overflow: hidden;

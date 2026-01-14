@@ -5,8 +5,8 @@
         Vui lòng đăng nhập để đặt hàng
       </v-card-text>
       <v-card-actions class="my-2 d-flex justify-center">
-        <v-btn class="text-success" text="Đăng nhập" @click="handleLogin" />
-        <v-btn class="text-error" text="Trở về" @click="handleCancel" />
+        <v-btn class="text-success text-none" text="Đăng nhập" @click="handleLogin" />
+        <v-btn class="text-error text-none" text="Trở về" @click="handleCancel" />
       </v-card-actions>
     </v-card>
   </v-dialog>

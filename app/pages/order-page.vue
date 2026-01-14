@@ -71,7 +71,7 @@
             <!-- Cột hình + badge -->
             <template #item.imageUrl="{ item }">
               <div class="image-wrapper">
-                <v-img :src="item.imageUrl" width="70" height="70" cover />
+                <v-img :src="item.imageUrl" width="70" height="70" contain />
                 <span class="qty-badge">{{ item.quantity }}</span>
               </div>
             </template>
@@ -196,7 +196,7 @@ const cartMeOrderList = computed(() =>
 
 const callOrderCreateApi = async () => {
   const createParam: any = {
-    userId: getUserId(),
+    userId: receiveName.value,
     receiverName: receiveName.value,
     addressDetail: address.value,
     phone: phoneNumber.value,
@@ -204,6 +204,7 @@ const callOrderCreateApi = async () => {
     paymentStatus: "0",
     totalAmount: totalPrice.value,
     cartMeOrderList: cartMeOrderList.value,
+    note: note.value,
   };
   try {
     const orderMeCreate = orderMeCreateApi();

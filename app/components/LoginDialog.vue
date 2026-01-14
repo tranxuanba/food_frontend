@@ -10,12 +10,12 @@
 
       <!-- Social -->
       <div class="d-flex justify-center gap-2 my-5">
-        <v-btn color="#3b5998" variant="flat">
+        <v-btn color="#3b5998" variant="flat" class="text-none">
           <v-icon start>mdi-facebook</v-icon>
           Facebook
         </v-btn>
 
-        <v-btn class="ml-3" color="#db4437" variant="flat">
+        <v-btn class="ml-3 text-none" color="#db4437" variant="flat">
           <v-icon start>mdi-google</v-icon>
           Google
         </v-btn>
@@ -55,7 +55,7 @@
             </div>
 
             <!-- Submit -->
-            <v-btn @click="submitForm()" block color="#029d16" size="large">
+            <v-btn @click="submitForm()" block color="#029d16" size="large" class="text-none">
               {{ isLogin ? "Đăng nhập" : "Đăng ký" }}
             </v-btn>
           </v-col>

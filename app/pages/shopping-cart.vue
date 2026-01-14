@@ -11,7 +11,7 @@
         </template>
         <!-- Image -->
         <template #item.imageUrl="{ item }">
-          <v-img :src="item.imageUrl" width="80" height="80" cover />
+          <v-img :src="item.imageUrl" width="80" height="80" contain />
         </template>
 
         <!-- Price -->

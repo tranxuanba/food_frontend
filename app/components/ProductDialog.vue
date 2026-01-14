@@ -2,9 +2,7 @@
   <v-dialog v-model="modelValue" max-width="900" persistent>
     <v-card>
       <!-- Close button -->
-      <v-card-title
-        class="modal-title-custom text-white d-flex align-center justify-space-between"
-      >
+      <v-card-title class="modal-title-custom text-white d-flex align-center justify-space-between">
         Chi tiết sản phẩm
         <v-btn icon @click="close()" variant="text">
           <v-icon class="text-white">mdi-close</v-icon>
@@ -14,7 +12,7 @@
       <v-row class="mx-0 my-0">
         <!-- Image -->
         <v-col cols="12" md="6" class="pa-0">
-          <v-img :src="foodInfo.imageUrl" aspect-ratio="1" cover />
+          <v-img :src="foodInfo.imageUrl" aspect-ratio="1" contain />
         </v-col>
 
         <!-- Content -->
@@ -42,40 +40,21 @@
           <div class="text-common d-flex align-center">
             <div class="d-flex align-center">
               <span class="mr-2">Số lượng</span>
-              <v-number-input
-                inset
-                variant="solo-filled"
-                v-model="foodInfo.quantity"
-                control-variant="split"
-                elevation="0"
-                class="no-shadow-number"
-                hide-details
-                @update:model-value="(val) => onQuantityChange(val)"
-              ></v-number-input>
+              <v-number-input inset variant="solo-filled" v-model="foodInfo.quantity" control-variant="split"
+                elevation="0" class="no-shadow-number" hide-details
+                @update:model-value="(val) => onQuantityChange(val)"></v-number-input>
             </div>
 
-            <v-btn 
-              color="#029d16"
-              class="text-none ml-6"
-              size="large"
-              @click="addToCart(foodInfo)"
-            >
-              MUA HÀNG
+            <v-btn color="#029d16" class="text-none ml-6" @click="addToCart(foodInfo)">
+              Mua hàng
             </v-btn>
           </div>
         </v-col>
       </v-row>
     </v-card>
   </v-dialog>
-  <CartDialog
-    v-model="showCartDialog"
-    :foodName="foodNameCart"
-    :imageUrl="imageUrlCart"
-    :price="priceCart"
-    :foodId="foodIdCart"
-    :userId="userId"
-    :totalCount="totalCount"
-  />
+  <CartDialog v-model="showCartDialog" :foodName="foodNameCart" :imageUrl="imageUrlCart" :price="priceCart"
+    :foodId="foodIdCart" :userId="userId" :totalCount="totalCount" />
   <ConfirmLoginDialog v-model="confirmLogin" />
 </template>
 

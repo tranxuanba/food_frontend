@@ -192,6 +192,11 @@ const headers = [
     headerProps: { class: "font-weight-bold text-common" },
   },
   {
+    title: "Ghi chú",
+    key: "note",
+    headerProps: { class: "font-weight-bold text-common" },
+  },
+  {
     title: "Số tiền",
     key: "totalAmount",
     headerProps: { class: "font-weight-bold text-common" },

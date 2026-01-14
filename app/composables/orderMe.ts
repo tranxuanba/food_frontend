@@ -13,6 +13,7 @@ export interface OrderMeCreateRequest {
   paymentMethod: string;
   paymentStatus: string;
   totalAmount: number;
+  note: string;
   cartMeOrderList: CartMeOrderRequest[];
 }
 
@@ -45,6 +46,7 @@ export interface OrderSearchResponse {
   receiverName: string;
   phone: string;
   addressDetail: string;
+  note: string;
   totalCount: number;
 }
 

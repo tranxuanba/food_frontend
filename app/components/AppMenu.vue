@@ -45,7 +45,7 @@ const menus = computed(() => [
   { title: "Tin tức" },
   { title: "Liên hệ" },
 ]);
-const onClickCategory = async (categoryId: any) => {
+const onClickCategory = async (categoryId: number[]) => {
   setSelectedCategories(categoryId);
 };
 </script>
