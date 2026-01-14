@@ -6,37 +6,52 @@
           Danh mục
         </v-sheet>
         <v-card-text>
-          <v-radio-group v-model="selectedCategory">
-            <v-radio v-for="item in categories" :label="item.categoryName" :value="item.categoryId" />
-          </v-radio-group>
+          <v-checkbox
+            v-for="item in categories"
+            :key="item.categoryId"
+            v-model="selectedCategories"
+            :label="item.categoryName"
+            :value="item.categoryId"
+          />
         </v-card-text>
       </v-card>
     </v-col>
     <v-col>
       <v-row class="food-cart pt-3 pr-3">
         <v-col class="pa-0" v-for="item in useFoods" :key="item.foodId">
-          <v-card class="product-card" elevation="0" variant="outlined" rounded="lg">
-            <v-img :src="item.imageUrl" aspect-ratio="1" cover />
-
+          <v-card
+            class="product-card"
+            elevation="0"
+            variant="outlined"
+            rounded="lg"
+          >
+            <v-img :src="item.imageUrl" aspect-ratio="1" contain />
             <v-card-text class="text-center pt-3">
-              {{ item.foodName }}
+              <v-tooltip activator="parent" location="top">
+                {{ item.foodName }}
+              </v-tooltip>
+              <div class="text-ellipsis">
+                {{ item.foodName }}
+              </div>
             </v-card-text>
-
-            <!-- Giá + Action -->
             <v-card-actions class="px-3 pb-3">
               <div class="text-green">
                 {{ formatPrice(item.price) }}
               </div>
-
               <v-spacer />
-
-              <!-- Xem chi tiết -->
-              <v-btn icon variant="text" @click="showProductDialog(item.foodId)">
+              <v-btn
+                icon
+                variant="text"
+                @click="showProductDialog(item.foodId)"
+              >
                 <v-icon>mdi-eye-outline</v-icon>
               </v-btn>
-
-              <!-- Thêm giỏ -->
-              <v-btn icon variant="text" color="success" @click="addToCart(item)">
+              <v-btn
+                icon
+                variant="text"
+                color="success"
+                @click="addToCart(item)"
+              >
                 <v-icon>mdi-cart-plus</v-icon>
               </v-btn>
             </v-card-actions>
@@ -44,15 +59,25 @@
         </v-col>
       </v-row>
       <v-row>
-        <Pagination v-model:pagination="pagination" :totalItems="totalItems"
-          @update:pagination="handlePaginationUpdate" />
+        <Pagination
+          v-model:pagination="pagination"
+          :totalItems="totalItems"
+          @update:pagination="handlePaginationUpdate"
+        />
       </v-row>
     </v-col>
   </v-row>
   <div class="category-page"></div>
   <ProductDialog v-model="showDialog" :food_info="foodDetail" />
-  <CartDialog v-model="showCartDialog" :foodName="foodNameCart" :imageUrl="imageUrlCart" :price="priceCart"
-    :foodId="foodIdCart" :userId="userId" :totalCount="totalCount" />
+  <CartDialog
+    v-model="showCartDialog"
+    :foodName="foodNameCart"
+    :imageUrl="imageUrlCart"
+    :price="priceCart"
+    :foodId="foodIdCart"
+    :userId="userId"
+    :totalCount="totalCount"
+  />
   <ConfirmLoginDialog v-model="confirmLogin" />
 </template>
 
@@ -74,7 +99,7 @@ import CartDialog from "../components/CartDialog.vue";
 
 const { setTotalCount, setCartItemMes } = useCartItemMeList();
 const { useFoods, setPagination } = useFoodList();
-const { setUseCategoryes, setSelectedCategoryId, useSelectedCategoryId } =
+const { setUseCategoryes, setSelectedCategories, useSelectedCategories } =
   useCategoryList();
 const showDialog = ref(false);
 const showCartDialog = ref(false);
@@ -186,10 +211,8 @@ onMounted(async () => {
   getTotalCount();
 });
 
-// format giá
 const formatPrice = (price: any) => price.toLocaleString("vi-VN") + "đ";
 
-// lấy danh sách category
 const categories = ref<any[]>([]);
 
 const getCategoryList = async () => {
@@ -201,17 +224,15 @@ const getCategoryList = async () => {
     console.error("Fetch food error", err);
   }
 };
-const selectedCategory = ref<number | null>(
-  useSelectedCategoryId.value ?? null
-);
-watch(selectedCategory, (newVal) => {
-  if (newVal) {
-    setSelectedCategoryId(selectedCategory.value ?? undefined);
+const selectedCategories = ref<number[]>(useSelectedCategories.value ?? []);
+watch(selectedCategories, (newVal) => {
+  if (newVal.length != 0) {
+    setSelectedCategories(newVal ?? []);
   }
 });
-watch(useSelectedCategoryId, (newVal) => {
+watch(useSelectedCategories, (newVal) => {
   if (newVal) {
-    selectedCategory.value = newVal;
+    useSelectedCategories.value = newVal;
   }
 });
 </script>
@@ -249,5 +270,12 @@ watch(useSelectedCategoryId, (newVal) => {
 
 .text-green {
   color: #029d16;
+}
+.text-ellipsis {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 13rem !important;
+  text-align: center !important;
 }
 </style>

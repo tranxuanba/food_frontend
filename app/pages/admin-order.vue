@@ -1,5 +1,5 @@
 <template>
-  <v-container>
+  <v-container class="pt-0">
     <v-card elevation="0">
       <v-row class="d-flex align-center pb-2">
         <v-col cols="3">
@@ -55,6 +55,20 @@
             Danh sách đơn hàng đang trống
           </div>
         </template>
+        <template #item.orderFoodName="{ item }">
+          <div>
+            <div
+              v-for="(food, index) in splitFoodNameList(item.orderFoodName)"
+              :key="index"
+            >
+              {{ index + 1 }} - {{ food }}
+            </div>
+          </div>
+        </template>
+        <template #item.paymentMethod="{ item }">
+          <div>{{ item.paymentMethod == "0" ? "Tiền mặt" : "" }}</div>
+        </template>
+
         <template #item.paymentStatus="{ item }">
           <v-radio-group
             hide-details
@@ -215,6 +229,11 @@ const handleOk = () => {
 };
 
 const formatPrice = (v: number) => v.toLocaleString("vi-VN") + "đ";
+const splitFoodNameList = (foodText?: string) => {
+  if (!foodText) return [];
+  return foodText.split("、").map((item) => item.trim());
+};
+
 const resetPagination = () => {
   pagination.value.limit = 10;
   pagination.value.offset = 0;

@@ -1,5 +1,5 @@
 export interface FoodSearchRequest {
-  categoryId?: number;
+  categoryIds?: number[];
   foodName?: string;
 }
 export interface FoodListResponse {

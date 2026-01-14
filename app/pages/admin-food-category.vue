@@ -1,12 +1,35 @@
 <template>
-  <v-container>
+  <v-container class="pt-2">
     <v-card elevation="0">
-      <v-row class="px-3 pb-6 pt-4">
-        <v-text-field color="green" v-model="keyword" density="compact" label="Tìm kiếm theo tên loại sản phẩm"
-          variant="outlined" style="max-width: 400px" append-inner-icon="mdi-magnify" hide-details single-line
-          @click:append-inner="onSearch"></v-text-field>
+      <v-row class="pb-6">
+        <v-col cols="3">
+          <v-text-field
+            color="green"
+            v-model="keyword"
+            density="compact"
+            label="Tìm kiếm theo tên loại sản phẩm"
+            variant="outlined"
+            hide-details
+            single-line
+          ></v-text-field>
+        </v-col>
+        <v-col cols="1"
+          ><v-btn
+            color="#029d16"
+            class="ml-2 text-none"
+            variant="flat"
+            @click="onSearch()"
+          >
+            Tìm kiếm
+          </v-btn>
+        </v-col>
       </v-row>
-      <v-data-table :headers="headers" :items="categories" item-key="id" hide-default-footer>
+      <v-data-table
+        :headers="headers"
+        :items="categories"
+        item-key="id"
+        hide-default-footer
+      >
         <template #no-data>
           <div class="text-center py-6 text-common">
             Danh sách loại sản phẩm đang trống
@@ -18,7 +41,12 @@
           </a>
         </template>
         <template #item.actions="{ item }">
-          <v-btn icon variant="text" color="red-lighten-1" @click="removeCategory(item.categoryId)">
+          <v-btn
+            icon
+            variant="text"
+            color="red-lighten-1"
+            @click="removeCategory(item.categoryId)"
+          >
             <v-icon>mdi-delete</v-icon>
           </v-btn>
         </template>
@@ -26,14 +54,21 @@
     </v-card>
 
     <div class="items-right mt-6">
-      <v-btn color="#029d16" class="ml-2 text-none" variant="flat" @click="addFoodCategory()">
+      <v-btn
+        color="#029d16"
+        class="ml-2 text-none"
+        variant="flat"
+        @click="addFoodCategory()"
+      >
         Thêm loại sản phẩm
       </v-btn>
     </div>
   </v-container>
   <v-dialog persistent v-model="categoryDialog" max-width="500">
     <v-card>
-      <v-card-title class="modal-title-custom text-white d-flex align-center justify-space-between">
+      <v-card-title
+        class="modal-title-custom text-white d-flex align-center justify-space-between"
+      >
         {{ isUpdateCategory ? "Thay đổi danh mục" : "Thêm danh mục" }}
         <v-btn icon @click="categoryDialog = false" variant="text">
           <v-icon class="text-white">mdi-close</v-icon>
@@ -47,17 +82,32 @@
             <v-row v-if="isUpdateCategory">
               <v-col>
                 <label class="input-label text-common">Id loại sản phẩm</label>
-                <v-text-field v-model="categoryId" variant="outlined" hide-details="auto" disabled></v-text-field>
+                <v-text-field
+                  v-model="categoryId"
+                  variant="outlined"
+                  hide-details="auto"
+                  disabled
+                ></v-text-field>
               </v-col>
             </v-row>
             <v-row class="pb-6">
               <v-col>
                 <label class="input-label text-common">Tên sản phẩm</label>
-                <v-text-field v-model="categoryName" variant="outlined" :rules="categoryNameRules"
-                  hide-details="auto"></v-text-field>
+                <v-text-field
+                  v-model="categoryName"
+                  variant="outlined"
+                  :rules="categoryNameRules"
+                  hide-details="auto"
+                ></v-text-field>
               </v-col>
             </v-row>
-            <v-btn @click="addUpdateCategory()" block color="#029d16" size="large" class="text-none">
+            <v-btn
+              @click="addUpdateCategory()"
+              block
+              color="#029d16"
+              size="large"
+              class="text-none"
+            >
               {{ isUpdateCategory ? "Cập nhật sản phẩm" : "Thêm sản phẩm" }}
             </v-btn>
           </v-col>
@@ -72,8 +122,11 @@
         {{ message }}
       </v-card-text>
       <v-card-actions class="my-2 d-flex justify-center">
-        <v-btn :class="isSuccess ? 'text-success' : 'text-error'" :text="isSuccess ? 'OK' : 'Trở về'"
-          @click="handleOk" />
+        <v-btn
+          :class="isSuccess ? 'text-success' : 'text-error'"
+          :text="isSuccess ? 'OK' : 'Trở về'"
+          @click="handleOk"
+        />
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -81,7 +134,10 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
-import { deleteCategoryApi, updateCategoryApi } from "../composables/categoryList";
+import {
+  deleteCategoryApi,
+  updateCategoryApi,
+} from "../composables/categoryList";
 
 const { searchCategoryList } = searchCategoryListApi();
 // lấy danh sách category

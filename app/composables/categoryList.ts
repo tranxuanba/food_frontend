@@ -43,16 +43,20 @@ export const useCategoryList = () => {
   const setUseCategoryes = (categoryList: any[]) => {
     useCategoryes.value = categoryList;
   };
-  const useSelectedCategoryId = useState<number | null>("categoryId", () => null);
+  const useSelectedCategories = useState<number[]>(
+    "selectedCategories",
+    () => []
+  );
 
-  const setSelectedCategoryId = (categoryId?: number) => {
-    useSelectedCategoryId.value = categoryId ?? null;
+  const setSelectedCategories = (categoryIds: number[]) => {
+    useSelectedCategories.value = categoryIds;
   };
+
   return {
     useCategoryes,
     setUseCategoryes,
-    useSelectedCategoryId,
-    setSelectedCategoryId
+    useSelectedCategories,
+    setSelectedCategories,
   };
 };
 
@@ -79,16 +83,13 @@ export const addCategoryApi = () => {
   const config = useRuntimeConfig();
 
   return async (payload: FoodCategoryAddRequest): Promise<void> => {
-    await $fetch(
-      `${config.public.apiBase}/food-categorys/add`,
-      {
-        method: "POST",
-        body: payload,
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
+    await $fetch(`${config.public.apiBase}/food-categorys/add`, {
+      method: "POST",
+      body: payload,
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
   };
 };
 
@@ -96,16 +97,13 @@ export const updateCategoryApi = () => {
   const config = useRuntimeConfig();
 
   return async (payload: FoodCategoryUpdateRequest): Promise<void> => {
-    await $fetch(
-      `${config.public.apiBase}/food-categorys/update`,
-      {
-        method: "POST",
-        body: payload,
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
+    await $fetch(`${config.public.apiBase}/food-categorys/update`, {
+      method: "POST",
+      body: payload,
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
   };
 };
 
@@ -113,15 +111,12 @@ export const deleteCategoryApi = () => {
   const config = useRuntimeConfig();
 
   return async (payload: FoodCategoryDeleteRequest): Promise<void> => {
-    await $fetch(
-      `${config.public.apiBase}/food-categorys/delete`,
-      {
-        method: "POST",
-        body: payload,
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
+    await $fetch(`${config.public.apiBase}/food-categorys/delete`, {
+      method: "POST",
+      body: payload,
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
   };
 };

@@ -28,7 +28,7 @@ import { ref } from "vue";
 import { useCategoryList } from "../composables/categoryList";
 
 // lấy danh sách category
-const { useCategoryes, setSelectedCategoryId } = useCategoryList();
+const { useCategoryes, setSelectedCategories } = useCategoryList();
 
 const menus = computed(() => [
   { title: "Trang chủ", to: "/food-main" },
@@ -46,7 +46,7 @@ const menus = computed(() => [
   { title: "Liên hệ" },
 ]);
 const onClickCategory = async (categoryId: any) => {
-  setSelectedCategoryId(categoryId);
+  setSelectedCategories(categoryId);
 };
 </script>
 <style scoped></style>
