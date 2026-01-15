@@ -2,7 +2,12 @@
   <v-container>
     <!-- Data table -->
     <v-card elevation="0">
-      <v-data-table :headers="headers" :items="cartItemList" item-key="id" hide-default-footer>
+      <v-data-table
+        :headers="headers"
+        :items="cartItemList"
+        item-key="id"
+        hide-default-footer
+      >
         <!-- No data -->
         <template #no-data>
           <div class="text-center py-6 text-common">
@@ -21,9 +26,17 @@
 
         <!-- Quantity -->
         <template #item.quantity="{ item }">
-          <v-number-input inset variant="solo-filled" v-model="item.quantity" control-variant="split" elevation="0"
-            class="no-shadow-number" hide-details @update:model-value="(val) => onQuantityChange(item, val)"
-            density="compact"></v-number-input>
+          <v-number-input
+            inset
+            variant="solo-filled"
+            v-model="item.quantity"
+            control-variant="split"
+            elevation="0"
+            class="no-shadow-number"
+            hide-details
+            @update:model-value="(val) => onQuantityChange(item, val)"
+            density="compact"
+          ></v-number-input>
         </template>
 
         <!-- Total -->
@@ -35,7 +48,12 @@
 
         <!-- Delete -->
         <template #item.actions="{ item }">
-          <v-btn icon variant="text" color="red-lighten-1" @click="removeFoodInCart(item.cartItemId)">
+          <v-btn
+            icon
+            variant="text"
+            color="red-lighten-1"
+            @click="removeFoodInCart(item.cartItemId, item.foodId)"
+          >
             <v-icon>mdi-delete</v-icon>
           </v-btn>
         </template>
@@ -45,15 +63,26 @@
     <!-- Footer -->
     <div class="d-flex justify-space-between align-center mt-6">
       <div>
-        <span class="mr-2 text-common">Tổng tiền:</span><span class="font-weight-bold price">{{
+        <span class="mr-2 text-common">Tổng tiền:</span
+        ><span class="font-weight-bold price">{{
           formatPrice(totalPrice)
         }}</span>
       </div>
       <div class="d-flex gap-3">
-        <v-btn class="text-none" color="#9c9696" variant="flat" @click="continueShopping()">
+        <v-btn
+          class="text-none"
+          color="#9c9696"
+          variant="flat"
+          @click="continueShopping()"
+        >
           Tiếp tục mua hàng
         </v-btn>
-        <v-btn color="#029d16" class="ml-2 text-none" variant="flat" @click="placeOrder()">
+        <v-btn
+          color="#029d16"
+          class="ml-2 text-none"
+          variant="flat"
+          @click="placeOrder()"
+        >
           Tiến hành đặt hàng
         </v-btn>
       </div>
@@ -71,7 +100,14 @@ const { totalCount } = useCartItemMeList();
 const { setTotalCount } = useCartItemMeList();
 const { setCartItemMes } = useCartItemMeList();
 const onQuantityChange = async (item: any, updateQuantity: number) => {
-  await callCartMeUpdateApi(getUserId(), item.foodId, updateQuantity);
+  if (isLoginOk()) {
+    const index = userCartItemStorage.value.findIndex(
+      (cartItem: any) => cartItem.foodId === item.foodId
+    );
+    userCartItemStorage.value[index].quantity = item.quantity;
+  } else {
+    await callCartMeUpdateApi(getUserId(), item.foodId, updateQuantity);
+  }
   await getCartInfo();
 };
 const userStorage = useLocalStorage<any>("user_me", "");
@@ -104,10 +140,22 @@ const callCartMeUpdateApi = async (
     console.error("lỗi update sản phẩm vào giỏ hàng", err);
   }
 };
+const userCartItemStorage = useLocalStorage<CartMeLocalStorage[] | any>(
+  "cart_me_localstorage",
+  []
+);
+const totalCountLocalstorage = computed(() =>
+  userCartItemStorage.value.reduce(
+    (sum: any, item: any) => sum + item.quantity,
+    0
+  )
+);
+totalCount.value = totalCountLocalstorage.value;
 const cartItemList = ref<any[]>([]);
 const getCartInfo = async () => {
   if (isLoginOk()) {
-    return;
+    totalCount.value = totalCountLocalstorage.value;
+    cartItemList.value = userCartItemStorage.value || "[]";
   } else {
     const cartParam: any = {
       userId: getUserId(),
@@ -116,12 +164,12 @@ const getCartInfo = async () => {
       const { cartItemMeList } = cartItemMeListApi();
       cartItemList.value = await cartItemMeList(cartParam);
       totalCount.value = cartItemList.value[0].totalCount ?? 0;
-      setCartItemMes(cartItemList.value);
-      setTotalCount(totalCount.value);
     } catch (err) {
       console.error("Fetch food error", err);
     }
   }
+  setCartItemMes(cartItemList.value);
+  setTotalCount(totalCount.value);
 };
 const callCartMeDeleteApi = async (cartItemId: number) => {
   const deleteCartParam: any = {
@@ -134,13 +182,18 @@ const callCartMeDeleteApi = async (cartItemId: number) => {
     console.error("xóa cart không thành công", err);
   }
 };
-const removeFoodInCart = async (cartItemId: any) => {
-  await callCartMeDeleteApi(cartItemId);
+const removeFoodInCart = async (cartItemId: any, foodId: any) => {
+  if (isLoginOk()) {
+    userCartItemStorage.value = userCartItemStorage.value.filter(
+      (item: any) => item.foodId !== foodId
+    );
+  } else {
+    await callCartMeDeleteApi(cartItemId);
+  }
   await getCartInfo();
 };
 onMounted(async () => {
   getCartInfo();
-  getCategoryList();
 });
 const headers = [
   {
@@ -182,18 +235,6 @@ const formatPrice = (v: number) => v.toLocaleString("vi-VN") + "đ";
 const totalPrice = computed(() =>
   useCartItemMes.value.reduce((sum, i) => sum + i.price * i.quantity, 0)
 );
-// lấy danh sách category
-const categories = ref<any[]>([]);
-const { setUseCategoryes } = useCategoryList();
-const getCategoryList = async () => {
-  try {
-    const { categoryList } = categoryListApi();
-    categories.value = await categoryList();
-    setUseCategoryes(categories.value);
-  } catch (err) {
-    console.error("Fetch food error", err);
-  }
-};
 
 const continueShopping = async () => {
   await navigateTo("/food-main");

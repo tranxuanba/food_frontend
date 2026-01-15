@@ -110,13 +110,7 @@ const confirmPassword = ref("");
 
 const isLogin = computed(() => props.mode === "login");
 
-const title = computed(() =>
-  isLogin.value ? "ĐĂNG NHẬP TÀI KHOẢN" : "ĐĂNG KÝ TÀI KHOẢN"
-);
-
 const submitText = computed(() => (isLogin.value ? "Đăng nhập" : "Đăng ký"));
-
-const close = () => emit("update:modelValue", false);
 </script>
 
 <style scoped>

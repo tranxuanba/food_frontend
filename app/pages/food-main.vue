@@ -6,15 +6,26 @@
           Danh mục
         </v-sheet>
         <v-card-text>
-          <v-checkbox v-for="item in categories" :key="item.categoryId" v-model="selectedCategories"
-            :label="item.categoryName" :value="item.categoryId" hide-details />
+          <v-checkbox
+            v-for="item in categories"
+            :key="item.categoryId"
+            v-model="selectedCategories"
+            :label="item.categoryName"
+            :value="item.categoryId"
+            hide-details
+          />
         </v-card-text>
       </v-card>
     </v-col>
     <v-col>
       <v-row class="food-cart pt-3 pr-3">
         <v-col class="pa-0" v-for="item in useFoods" :key="item.foodId">
-          <v-card class="product-card" elevation="0" variant="outlined" rounded="lg">
+          <v-card
+            class="product-card"
+            elevation="0"
+            variant="outlined"
+            rounded="lg"
+          >
             <v-img :src="item.imageUrl" aspect-ratio="1" contain />
             <v-card-text class="text-center pt-3">
               <v-tooltip activator="parent" location="top">
@@ -29,10 +40,19 @@
                 {{ formatPrice(item.price) }}
               </div>
               <v-spacer />
-              <v-btn icon variant="text" @click="showProductDialog(item.foodId)">
+              <v-btn
+                icon
+                variant="text"
+                @click="showProductDialog(item.foodId)"
+              >
                 <v-icon>mdi-eye-outline</v-icon>
               </v-btn>
-              <v-btn icon variant="text" color="success" @click="addToCart(item)">
+              <v-btn
+                icon
+                variant="text"
+                color="success"
+                @click="addToCart(item, $event)"
+              >
                 <v-icon>mdi-cart-plus</v-icon>
               </v-btn>
             </v-card-actions>
@@ -40,16 +60,16 @@
         </v-col>
       </v-row>
       <v-row>
-        <Pagination v-model:pagination="pagination" :totalItems="totalItems"
-          @update:pagination="handlePaginationUpdate" />
+        <Pagination
+          v-model:pagination="pagination"
+          :totalItems="totalItems"
+          @update:pagination="handlePaginationUpdate"
+        />
       </v-row>
     </v-col>
   </v-row>
   <div class="category-page"></div>
   <ProductDialog v-model="showDialog" :food_info="foodDetail" />
-  <CartDialog v-model="showCartDialog" :foodName="foodNameCart" :imageUrl="imageUrlCart" :price="priceCart"
-    :foodId="foodIdCart" :userId="userId" :totalCount="totalCount" />
-  <ConfirmLoginDialog v-model="confirmLogin" />
 </template>
 
 <script setup lang="ts">
@@ -66,14 +86,12 @@ import { useLocalStorage } from "@vueuse/core";
 import Pagination from "../components/Pagination.vue";
 import { ref, onMounted } from "vue";
 import ProductDialog from "../components/ProductDialog.vue";
-import CartDialog from "../components/CartDialog.vue";
 
 const { setTotalCount, setCartItemMes } = useCartItemMeList();
 const { useFoods, setPagination } = useFoodList();
 const { setUseCategoryes, setSelectedCategories, useSelectedCategories } =
   useCategoryList();
 const showDialog = ref(false);
-const showCartDialog = ref(false);
 const foodDetail = ref<Record<string, any>>({});
 const showProductDialog = async (foodId: number) => {
   const param: any = {
@@ -113,7 +131,6 @@ const priceCart = ref<string>("");
 const userId = ref<string>("");
 const foodIdCart = ref<number>(0);
 const totalCount = ref<number>(0);
-const confirmLogin = ref<boolean>(false);
 const isLoginOk = () => {
   const userStorage = useLocalStorage<any>("user_me", "");
 
@@ -126,23 +143,99 @@ const isLoginOk = () => {
   }
   return true;
 };
-const addToCart = async (item: any) => {
+const userCartItemStorage = useLocalStorage<CartMeLocalStorage[] | any>(
+  "cart_me_localstorage",
+  []
+);
+const addToCartLocalstorage = (item: CartMeLocalStorage) => {
+  const index = userCartItemStorage.value.findIndex(
+    (cartItem: any) => cartItem.foodId === item.foodId
+  );
+
+  if (index !== -1) {
+    userCartItemStorage.value[index].quantity += item.quantity || 1;
+  } else {
+    userCartItemStorage.value.push({
+      ...item,
+      quantity: item.quantity || 1,
+    });
+  }
+};
+
+const addToCart = async (item: any, event: MouseEvent) => {
+  const sourceEl = event.currentTarget as HTMLElement;
+  flyToCart(sourceEl);
   if (isLoginOk()) {
-    confirmLogin.value = true;
+    addToCartLocalstorage({
+      foodId: item.foodId,
+      foodName: item.foodName,
+      imageUrl: item.imageUrl,
+      price: item.price,
+      quantity: 1,
+    });
   } else {
     await callCartMeUpdateApi(userId.value, item.foodId);
     foodNameCart.value = item.foodName;
     imageUrlCart.value = item.imageUrl;
     priceCart.value = formatPrice(item.price);
     foodIdCart.value = item.foodId;
-    await getTotalCount();
-    showCartDialog.value = true;
   }
+  await getTotalCount();
+  animateCart();
 };
+const animateCart = () => {
+  if (!cartIcon.value) return;
+
+  cartIcon.value.classList.remove("cart-animate");
+  // ép reflow để animation chạy lại
+  void cartIcon.value.offsetWidth;
+  cartIcon.value.classList.add("cart-animate");
+};
+
+const { cartIcon } = useCartIcon();
+const flyToCart = (sourceEl: HTMLElement) => {
+  if (!cartIcon.value) return;
+
+  const sourceRect = sourceEl.getBoundingClientRect();
+  const targetRect = cartIcon.value.getBoundingClientRect();
+
+  const flyEl = sourceEl.cloneNode(true) as HTMLElement;
+
+  flyEl.style.position = "fixed";
+  flyEl.style.left = `${sourceRect.left}px`;
+  flyEl.style.top = `${sourceRect.top}px`;
+  flyEl.style.width = `${sourceRect.width}px`;
+  flyEl.style.height = `${sourceRect.height}px`;
+  flyEl.style.zIndex = "9999";
+  flyEl.style.pointerEvents = "none";
+  flyEl.style.transition = "all 0.7s cubic-bezier(0.4, 0.0, 0.2, 1)";
+
+  document.body.appendChild(flyEl);
+
+  requestAnimationFrame(() => {
+    flyEl.style.left = `${targetRect.left}px`;
+    flyEl.style.top = `${targetRect.top}px`;
+    flyEl.style.transform = "scale(0.2)";
+    flyEl.style.opacity = "0";
+  });
+
+  setTimeout(() => {
+    flyEl.remove();
+  }, 700);
+};
+const totalCountLocalstorage = computed(() =>
+  userCartItemStorage.value.reduce(
+    (sum: any, item: any) => sum + item.quantity,
+    0
+  )
+);
 const cartItemList = ref<any[]>([]);
 const getTotalCount = async () => {
   if (isLoginOk()) {
-    return;
+    totalCount.value = totalCountLocalstorage.value;
+    cartItemList.value = userCartItemStorage.value || "[]";
+    setCartItemMes(cartItemList.value);
+    setTotalCount(totalCount.value);
   } else {
     const cartParam: any = {
       userId: userId.value,

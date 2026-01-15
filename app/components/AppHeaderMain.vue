@@ -4,15 +4,38 @@
       <div class="">
         <v-img :width="200" aspect-ratio="16/9" contain :src="LogoBaDung" />
       </div>
-      <v-text-field color="green" v-model="keyword" density="compact" label="Tìm kiếm..." variant="outlined"
-        style="max-width: 400px" append-inner-icon="mdi-magnify" hide-details single-line
-        @click:append-inner="onSearch"></v-text-field>
-      <v-menu open-on-hover location="bottom" offset="4" :open-on-click="false" :close-on-content-click="false">
+      <v-text-field
+        color="green"
+        v-model="keyword"
+        density="compact"
+        label="Tìm kiếm..."
+        variant="outlined"
+        style="max-width: 400px"
+        append-inner-icon="mdi-magnify"
+        hide-details
+        single-line
+        @click:append-inner="onSearch"
+      ></v-text-field>
+      <v-menu
+        open-on-hover
+        location="bottom"
+        offset="4"
+        :open-on-click="false"
+        :close-on-content-click="false"
+      >
         <template #activator="{ props }">
-          <v-btn class="text-none" v-bind="props" color="#029d16" variant="flat" @click="shoppingCart">
-            <v-icon start>mdi-cart-outline</v-icon>
-            Giỏ hàng ({{ totalCount }})
-          </v-btn>
+          <span ref="cartRef">
+            <v-btn
+              class="text-none"
+              v-bind="props"
+              color="#029d16"
+              variant="flat"
+              @click="shoppingCart"
+            >
+              <v-icon start>mdi-cart-outline</v-icon>
+              Giỏ hàng ({{ totalCount }})
+            </v-btn></span
+          >
         </template>
 
         <v-card min-width="400" max-height="700">
@@ -20,7 +43,8 @@
             <v-card-text class="text-common">
               <v-row class="pa-2 d-flex align-center">
                 <v-col>Giỏ hàng trống</v-col>
-              </v-row></v-card-text>
+              </v-row></v-card-text
+            >
           </div>
           <div v-else>
             <v-card-text class="text-common">
@@ -34,18 +58,36 @@
                   </v-row>
                   <v-row class="ps-4 pt-1 d-flex align-center">
                     <v-col cols="5" class="px-0"><span>Số lượng: </span></v-col>
-                    <v-col cols="7" class="px-0"><v-number-input inset variant="solo-filled" v-model="item.quantity"
-                        control-variant="split" elevation="0" class="no-shadow-number" hide-details @update:model-value="
+                    <v-col cols="7" class="px-0"
+                      ><v-number-input
+                        inset
+                        variant="solo-filled"
+                        v-model="item.quantity"
+                        control-variant="split"
+                        elevation="0"
+                        class="no-shadow-number"
+                        hide-details
+                        @update:model-value="
                           (val) => onQuantityChange(item, val)
-                        " density="compact"></v-number-input></v-col>
+                        "
+                        density="compact"
+                      ></v-number-input
+                    ></v-col>
                   </v-row>
-                  <v-row class="pb-1 ps-4">Giá:
+                  <v-row class="pb-1 ps-4"
+                    >Giá:
                     <span class="price">{{
                       formatPrice(item.price)
-                    }}</span></v-row>
+                    }}</span></v-row
+                  >
                 </v-col>
                 <v-col cols="1">
-                  <v-btn icon variant="text" color="red-lighten-1" @click="removeFoodInCart(item.cartItemId)">
+                  <v-btn
+                    icon
+                    variant="text"
+                    color="red-lighten-1"
+                    @click="removeFoodInCart(item.cartItemId, item.foodId)"
+                  >
                     <v-icon style="font-size: 25px">mdi-close-circle</v-icon>
                   </v-btn>
                 </v-col>
@@ -53,15 +95,22 @@
               </v-row>
             </v-card-text>
             <v-card-actions class="mb-2 d-flex justify-center">
-              <v-btn class="btn-shopping-cart text-none" text="Giỏ hàng" @click="handleShoppingCart" />
-              <v-btn class="btn-payment-cart text-none" text="Thanh toán" @click="handlePayment" />
+              <v-btn
+                class="btn-shopping-cart text-none"
+                text="Giỏ hàng"
+                @click="handleShoppingCart"
+              />
+              <v-btn
+                class="btn-payment-cart text-none"
+                text="Thanh toán"
+                @click="handlePayment"
+              />
             </v-card-actions>
           </div>
         </v-card>
       </v-menu>
     </div>
   </v-container>
-  <ConfirmLoginDialog v-model="confirmLogin" />
 </template>
 
 <script setup lang="ts">
@@ -71,12 +120,14 @@ import { ref } from "vue";
 import { useLocalStorage } from "@vueuse/core";
 import { useCartItemMeList } from "../composables/cartItemMe";
 
+const cartRef = ref<HTMLElement | null>();
+const { cartIcon } = useCartIcon();
+
 const route = useRoute();
 const { setTotalCount, setCartItemMes, useCartItemMes, totalCount } =
   useCartItemMeList();
 const { setFoods, setSearchFoodName, usePagination } = useFoodList();
 const { useSelectedCategories } = useCategoryList();
-const confirmLogin = ref<boolean>(false);
 const userStorage = useLocalStorage<any>("user_me", "");
 const getUserId = () => {
   const userId = computed(
@@ -91,14 +142,17 @@ const isLoginOk = () => {
   return true;
 };
 const shoppingCart = () => {
-  if (isLoginOk()) {
-    confirmLogin.value = true;
-  } else {
-    navigateTo(`/shopping-cart`);
-  }
+  navigateTo(`/shopping-cart`);
 };
 const onQuantityChange = async (item: any, updateQuantity: number) => {
-  await callCartMeUpdateApi(getUserId(), item.foodId, updateQuantity);
+  if (isLoginOk()) {
+    const index = userCartItemStorage.value.findIndex(
+      (cartItem: any) => cartItem.foodId === item.foodId
+    );
+    userCartItemStorage.value[index].quantity = item.quantity;
+  } else {
+    await callCartMeUpdateApi(getUserId(), item.foodId, updateQuantity);
+  }
   await getCartInfo();
 };
 const callCartMeUpdateApi = async (
@@ -118,10 +172,23 @@ const callCartMeUpdateApi = async (
     console.error("lỗi update sản phẩm vào giỏ hàng", err);
   }
 };
+const userCartItemStorage = useLocalStorage<CartMeLocalStorage[] | any>(
+  "cart_me_localstorage",
+  []
+);
+const totalCountLocalstorage = computed(() =>
+  userCartItemStorage.value.reduce(
+    (sum: any, item: any) => sum + item.quantity,
+    0
+  )
+);
+totalCount.value = totalCountLocalstorage.value;
+
 const cartItemList = ref<any[]>([]);
 const getCartInfo = async () => {
   if (isLoginOk()) {
-    return;
+    totalCount.value = totalCountLocalstorage.value;
+    cartItemList.value = userCartItemStorage.value || "[]";
   } else {
     const cartParam: any = {
       userId: getUserId(),
@@ -130,12 +197,12 @@ const getCartInfo = async () => {
       const { cartItemMeList } = cartItemMeListApi();
       cartItemList.value = await cartItemMeList(cartParam);
       totalCount.value = cartItemList.value[0].totalCount ?? 0;
-      setCartItemMes(cartItemList.value);
-      setTotalCount(totalCount.value);
     } catch (err) {
       console.error("Fetch food error", err);
     }
   }
+  setCartItemMes(cartItemList.value);
+  setTotalCount(totalCount.value);
 };
 const callCartMeDeleteApi = async (cartItemId: number) => {
   const deleteCartParam: any = {
@@ -148,14 +215,31 @@ const callCartMeDeleteApi = async (cartItemId: number) => {
     console.error("xóa cart không thành công", err);
   }
 };
-const removeFoodInCart = async (cartItemId: any) => {
-  await callCartMeDeleteApi(cartItemId);
+const removeFoodInCart = async (cartItemId: any, foodId: any) => {
+  if (isLoginOk()) {
+    userCartItemStorage.value = userCartItemStorage.value.filter(
+      (item: any) => item.foodId !== foodId
+    );
+  } else {
+    await callCartMeDeleteApi(cartItemId);
+  }
   await getCartInfo();
 };
 const keyword = ref("");
 onMounted(async () => {
   getFoodList();
 });
+
+watch(
+  cartRef,
+  async (el) => {
+    if (!el) return;
+    await nextTick();
+    cartIcon.value = el ?? null;
+  },
+  { immediate: true }
+);
+
 const onSearch = () => {
   getFoodList();
 };
@@ -251,5 +335,23 @@ const formatPrice = (price: any) => price.toLocaleString("vi-VN") + "đ";
 .no-shadow-number ::v-deep(.v-field) {
   box-shadow: none !important;
   background-color: #fff !important;
+}
+@keyframes cart-bounce {
+  0% {
+    transform: scale(1);
+  }
+  30% {
+    transform: scale(1.25);
+  }
+  60% {
+    transform: scale(0.95);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.cart-animate {
+  animation: cart-bounce 0.4s ease;
 }
 </style>

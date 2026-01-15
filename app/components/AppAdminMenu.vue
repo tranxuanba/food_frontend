@@ -1,7 +1,7 @@
 <template>
   <v-container class="pb-0">
     <template v-for="(menu, index) in menus" :key="index">
-      <v-btn class="text-none font-weight-bold text-common" variant="text" :to="menu.to">
+      <v-btn style="font-size: 15px !important;" class="text-none font-weight-bold text-common" variant="text" :to="menu.to">
         {{ menu.title }}
       </v-btn>
     </template>

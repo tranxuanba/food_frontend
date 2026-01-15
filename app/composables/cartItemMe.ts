@@ -11,6 +11,14 @@ export interface CartMeResponse {
   totalPrice: number;
   totalCount: number;
 }
+export interface CartMeLocalStorage {
+  foodId: number;
+  foodName: string;
+  imageUrl: string;
+  price: number;
+  quantity: number;
+}
+
 export interface CartMeUpdateRequest {
   userId: string;
   foodId: number;
@@ -109,4 +117,14 @@ export const cartItemMeDeleteApi = () => {
   };
 };
 
+export const useCartIcon = () => {
+  const cartIcon = useState<HTMLElement | null>(
+    'cart-icon',
+    () => null
+  );
+
+  return {
+    cartIcon
+  };
+};
 

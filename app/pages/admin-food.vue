@@ -37,6 +37,11 @@
             {{ item.status == "0" ? "còn hàng" : "hết hàng" }}
           </span>
         </template>
+        <template #item.description="{ item }">
+          <span class="text-break">
+            {{ item.description }}
+          </span>
+        </template>
         <template #item.actions="{ item }">
           <v-btn icon variant="text" color="red-lighten-1" @click="removeFood(item.foodId)">
             <v-icon>mdi-delete</v-icon>
@@ -49,7 +54,7 @@
 
     <div class="items-right mt-6">
       <v-btn color="#029d16" class="ml-2 text-none" variant="flat" @click="addFood()">
-        Thêm loại sản phẩm
+        Thêm sản phẩm
       </v-btn>
     </div>
   </v-container>
@@ -421,5 +426,9 @@ const resetPagination = () => {
 
 .price {
   color: #f57c00;
+}
+
+.text-break{
+  white-space: break-spaces !important;
 }
 </style>

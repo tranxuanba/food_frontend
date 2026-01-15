@@ -2,7 +2,9 @@
   <v-dialog v-model="modelValue" max-width="900" persistent>
     <v-card>
       <!-- Close button -->
-      <v-card-title class="modal-title-custom text-white d-flex align-center justify-space-between">
+      <v-card-title
+        class="modal-title-custom text-white d-flex align-center justify-space-between"
+      >
         Chi tiết sản phẩm
         <v-btn icon @click="close()" variant="text">
           <v-icon class="text-white">mdi-close</v-icon>
@@ -28,7 +30,7 @@
 
           <div class="price mb-4">{{ formatPrice(foodInfo.price) }}</div>
 
-          <p class="text-body-2 text-common mb-4">
+          <p class="text-body-2 text-common mb-4 text-break">
             {{ foodInfo.description }}
           </p>
 
@@ -40,12 +42,23 @@
           <div class="text-common d-flex align-center">
             <div class="d-flex align-center">
               <span class="mr-2">Số lượng</span>
-              <v-number-input inset variant="solo-filled" v-model="foodInfo.quantity" control-variant="split"
-                elevation="0" class="no-shadow-number" hide-details
-                @update:model-value="(val) => onQuantityChange(val)"></v-number-input>
+              <v-number-input
+                inset
+                variant="solo-filled"
+                v-model="foodInfo.quantity"
+                control-variant="split"
+                elevation="0"
+                class="no-shadow-number"
+                hide-details
+                @update:model-value="(val) => onQuantityChange(val)"
+              ></v-number-input>
             </div>
 
-            <v-btn color="#029d16" class="text-none ml-6" @click="addToCart(foodInfo)">
+            <v-btn
+              color="#029d16"
+              class="text-none ml-6"
+              @click="addToCart(foodInfo, $event)"
+            >
               Mua hàng
             </v-btn>
           </div>
@@ -53,8 +66,15 @@
       </v-row>
     </v-card>
   </v-dialog>
-  <CartDialog v-model="showCartDialog" :foodName="foodNameCart" :imageUrl="imageUrlCart" :price="priceCart"
-    :foodId="foodIdCart" :userId="userId" :totalCount="totalCount" />
+  <CartDialog
+    v-model="showCartDialog"
+    :foodName="foodNameCart"
+    :imageUrl="imageUrlCart"
+    :price="priceCart"
+    :foodId="foodIdCart"
+    :userId="userId"
+    :totalCount="totalCount"
+  />
   <ConfirmLoginDialog v-model="confirmLogin" />
 </template>
 
@@ -92,7 +112,7 @@ const emit = defineEmits(["update:modelValue"]);
 const close = () => {
   emit("update:modelValue", false);
 };
-const quantityChange = ref<number>();
+const quantityChange = ref<number>(1);
 const onQuantityChange = async (updateQuantity: number) => {
   quantityChange.value = updateQuantity;
 };
@@ -116,7 +136,9 @@ const isLoginOk = () => {
   }
   return true;
 };
-const addToCart = async (item: any) => {
+const addToCart = async (item: any, event: MouseEvent) => {
+  const sourceEl = event.currentTarget as HTMLElement;
+  flyToCart(sourceEl);
   if (isLoginOk()) {
     confirmLogin.value = true;
   } else {
@@ -128,6 +150,7 @@ const addToCart = async (item: any) => {
     await getTotalCount();
     showCartDialog.value = true;
   }
+  animateCart();
 };
 const cartItemList = ref<any[]>([]);
 const getTotalCount = async () => {
@@ -166,6 +189,46 @@ const callCartMeUpdateApi = async (userId: string, foodId: number) => {
     console.error("lỗi update sản phẩm vào giỏ hàng", err);
   }
 };
+const animateCart = () => {
+  if (!cartIcon.value) return;
+
+  cartIcon.value.classList.remove("cart-animate");
+  // ép reflow để animation chạy lại
+  void cartIcon.value.offsetWidth;
+  cartIcon.value.classList.add("cart-animate");
+};
+
+const { cartIcon } = useCartIcon();
+const flyToCart = (sourceEl: HTMLElement) => {
+  if (!cartIcon.value) return;
+
+  const sourceRect = sourceEl.getBoundingClientRect();
+  const targetRect = cartIcon.value.getBoundingClientRect();
+
+  const flyEl = sourceEl.cloneNode(true) as HTMLElement;
+
+  flyEl.style.position = "fixed";
+  flyEl.style.left = `${sourceRect.left}px`;
+  flyEl.style.top = `${sourceRect.top}px`;
+  flyEl.style.width = `${sourceRect.width}px`;
+  flyEl.style.height = `${sourceRect.height}px`;
+  flyEl.style.zIndex = "9999";
+  flyEl.style.pointerEvents = "none";
+  flyEl.style.transition = "all 0.7s cubic-bezier(0.4, 0.0, 0.2, 1)";
+
+  document.body.appendChild(flyEl);
+
+  requestAnimationFrame(() => {
+    flyEl.style.left = `${targetRect.left}px`;
+    flyEl.style.top = `${targetRect.top}px`;
+    flyEl.style.transform = "scale(0.2)";
+    flyEl.style.opacity = "0";
+  });
+
+  setTimeout(() => {
+    flyEl.remove();
+  }, 700);
+};
 </script>
 
 <style scoped>
@@ -178,5 +241,9 @@ const callCartMeUpdateApi = async (userId: string, foodId: number) => {
 .no-shadow-number ::v-deep(.v-field) {
   box-shadow: none !important;
   background-color: #fff !important;
+}
+
+.text-break {
+  white-space: break-spaces !important;
 }
 </style>

@@ -1,11 +1,11 @@
 <template>
   <v-footer class="app-footer ps-0 pe-0" color="#029d16">
-    <v-container>
+    <v-container class="py-0">
       <v-row class="" dense>
         <!-- Cột 1: Thông tin công ty -->
         <v-col cols="3">
           <v-list bg-color="#029d16">
-            <v-list-subheader class="text-footer">SHOP NHÀ BA DUNG</v-list-subheader>
+            <v-list-subheader class="text-footer">Shop nhà Ba Dung</v-list-subheader>
             <v-list-item v-for="(item, i) in baDungItems" :key="i" :value="item" color="primary">
               <template v-slot:prepend>
                 <v-icon :icon="item.icon"></v-icon>
@@ -19,7 +19,7 @@
         <!-- Cột 2: Danh mục -->
         <v-col cols="3">
           <v-list bg-color="#029d16">
-            <v-list-subheader class="text-footer">DANH MỤC SẢN PHẨM</v-list-subheader>
+            <v-list-subheader class="text-footer">Danh mục sản phẩm</v-list-subheader>
             <v-list-item v-for="(item, i) in categoryItems" :key="i" :value="item.categoryId" color="primary"
               @click="onClickCategory(item.categoryId)">
               <template #prepend>
@@ -34,7 +34,7 @@
         <!-- Cột 3: Hỗ trợ -->
         <v-col cols="3">
           <v-list bg-color="#029d16">
-            <v-list-subheader class="text-footer">HỖ TRỢ KHÁCH HÀNG</v-list-subheader>
+            <v-list-subheader class="text-footer">Hỗ trợ khách hàng</v-list-subheader>
             <v-list-item v-for="(item, i) in supportItems" :key="i" :value="item" color="primary">
               <template #prepend>
                 <v-icon icon="mdi-circle" size="10" color="white" />
@@ -47,7 +47,7 @@
         <!-- Cột 4: Về Organic -->
         <v-col cols="3">
           <v-list bg-color="#029d16">
-            <v-list-subheader class="text-footer">VỀ CHÚNG TÔI</v-list-subheader>
+            <v-list-subheader class="text-footer">Về chúng tôi</v-list-subheader>
             <v-list-item v-for="(item, i) in aboutUsItems" :key="i" :value="item" color="primary">
               <template #prepend>
                 <v-icon icon="mdi-circle" size="10" color="white" />
@@ -58,8 +58,8 @@
         </v-col>
       </v-row>
       <v-divider class="my-4" />
-      <v-row class="footer-bottom">
-        <div class="ps-4">© {{ year }} Bản quyền thuộc về Trần Xuân Ba</div>
+      <v-row class="ma-2 d-flex align-center">
+        <div>© {{ year }} Bản quyền thuộc về Trần Xuân Ba</div>
       </v-row>
     </v-container>
   </v-footer>
@@ -93,7 +93,7 @@ const onClickCategory = async (categoryId: number[]) => {
 <style scoped>
 .text-footer {
   color: #fff;
-  font-weight: bold;
+  font-size: 18px !important;
 }
 
 .app-footer {
@@ -101,7 +101,4 @@ const onClickCategory = async (categoryId: number[]) => {
   font-size: 14px;
 }
 
-.footer-bottom {
-  padding-top: 15px;
-}
 </style>
