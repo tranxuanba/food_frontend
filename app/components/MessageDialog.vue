@@ -5,8 +5,11 @@
         {{ message }}
       </v-card-text>
       <v-card-actions class="my-2 d-flex justify-center">
-        <v-btn :class="isSuccess ? 'text-success' : 'text-error'" :text="isSuccess ? 'OK' : 'Trở về'"
-          @click="handleOk" />
+        <v-btn
+          :class="isSuccess ? 'text-success' : 'text-error'"
+          :text="isSuccess ? 'OK' : 'Trở về'"
+          @click="handleOk"
+        />
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -22,13 +25,11 @@ const props = defineProps<{
 }>();
 
 const emit = defineEmits(["update:messageDialog"]);
-const userStorage = useLocalStorage<any>("user_me", "");
-const useRoleName = computed(
-  () => JSON.parse(userStorage.value || "{}")?.roleName ?? ""
-);
+const userStorage = useLocalStorage<any>("user_me", "{}");
+const useRoleName = computed(() => userStorage.value.roleName ?? "");
 async function handleOk() {
   if (props.isSuccess) {
-    if (useRoleName.value == 'ADMIN') {
+    if (useRoleName.value == "ADMIN") {
       await navigateTo(`/admin-food-category`);
     } else {
       await navigateTo(`/food-main`);
