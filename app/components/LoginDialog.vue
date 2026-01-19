@@ -1,7 +1,14 @@
 <template>
-  <v-dialog persistent :model-value="modelValue" max-width="600" @update:modelValue="emit('update:modelValue', $event)">
+  <v-dialog
+    persistent
+    :model-value="modelValue"
+    max-width="600"
+    @update:modelValue="emit('update:modelValue', $event)"
+  >
     <v-card>
-      <v-card-title class="modal-title-custom text-white d-flex align-center justify-space-between">
+      <v-card-title
+        class="modal-title-custom text-white d-flex align-center justify-space-between"
+      >
         {{ isLogin ? "Đăng nhập tài khoản" : "Đăng ký tài khoản" }}
         <v-btn icon @click="modelValue = false" variant="text">
           <v-icon class="text-white">mdi-close</v-icon>
@@ -28,23 +35,42 @@
           <v-col cols="10">
             <v-row>
               <v-col>
-                <label v-if="!isLogin" class="input-label text-common">Tên người dùng</label>
-                <v-text-field v-if="!isLogin" v-model="fullName" :rules="fullNameRules" variant="outlined"
-                  hide-details="auto" placeholder="Nhập họ và tên..."></v-text-field>
+                <label v-if="!isLogin" class="input-label text-common"
+                  >Tên người dùng</label
+                >
+                <v-text-field
+                  v-if="!isLogin"
+                  v-model="fullName"
+                  :rules="fullNameRules"
+                  variant="outlined"
+                  hide-details="auto"
+                  placeholder="Nhập họ và tên..."
+                ></v-text-field>
               </v-col>
             </v-row>
             <v-row>
               <v-col>
                 <label class="input-label text-common">Email</label>
-                <v-text-field v-model="email" variant="outlined" :rules="emailRules" hide-details="auto"
-                  placeholder="Nhập email..."></v-text-field>
+                <v-text-field
+                  v-model="email"
+                  variant="outlined"
+                  :rules="emailRules"
+                  hide-details="auto"
+                  placeholder="Nhập email..."
+                ></v-text-field>
               </v-col>
             </v-row>
             <v-row class="mb-4">
               <v-col>
                 <label class="input-label text-common">Mật khẩu</label>
-                <v-text-field v-model="password" :rules="passwordRules" variant="outlined" hide-details="auto"
-                  type="password" placeholder="Nhập mật khẩu..."></v-text-field>
+                <v-text-field
+                  v-model="password"
+                  :rules="passwordRules"
+                  variant="outlined"
+                  hide-details="auto"
+                  type="password"
+                  placeholder="Nhập mật khẩu..."
+                ></v-text-field>
               </v-col>
             </v-row>
 
@@ -55,7 +81,13 @@
             </div>
 
             <!-- Submit -->
-            <v-btn @click="submitForm()" block color="#029d16" size="large" class="text-none">
+            <v-btn
+              @click="submitForm()"
+              block
+              color="#029d16"
+              size="large"
+              class="text-none"
+            >
               {{ isLogin ? "Đăng nhập" : "Đăng ký" }}
             </v-btn>
           </v-col>
@@ -66,21 +98,33 @@
       <div class="text-center my-4 text-caption">
         <template v-if="isLogin">
           Chưa có tài khoản? Đăng ký
-          <a href="#" class="text-green" @click.prevent="emit('switch', 'register')">
+          <a
+            href="#"
+            class="text-green"
+            @click.prevent="emit('switch', 'register')"
+          >
             tại đây
           </a>
         </template>
 
         <template v-else>
           Đã có tài khoản?
-          <a href="#" class="text-green" @click.prevent="emit('switch', 'login')">
+          <a
+            href="#"
+            class="text-green"
+            @click.prevent="emit('switch', 'login')"
+          >
             đăng nhập tại đây
           </a>
         </template>
       </div>
     </v-card>
   </v-dialog>
-  <MessageDialog v-model="showMessage" :message="message" :isSuccess="isSuccess" />
+  <MessageDialog
+    v-model="showMessage"
+    :message="message"
+    :isSuccess="isSuccess"
+  />
 </template>
 
 <script setup lang="ts">
@@ -90,20 +134,21 @@ import { userApi } from "../composables/userInfo";
 import MessageDialog from "./MessageDialog.vue";
 import { useLocalStorage } from "@vueuse/core";
 
-//validate 
+//validate
 const fullNameRules = [
-  (v: any) => !!v || 'Tên người dùng không được để trống',
-  (v: string | any[]) => (v && v.length <= 100) || 'Tên người dùng không được quá 100 ký tự'
-]
+  (v: any) => !!v || "Tên người dùng không được để trống",
+  (v: string | any[]) =>
+    (v && v.length <= 100) || "Tên người dùng không được quá 100 ký tự",
+];
 const emailRules = [
-  (v: any) => !!v || 'Email không được để trống',
-  (v: string) => /.+@.+\..+/.test(v) || 'Email không đúng định dạng'
-]
+  (v: any) => !!v || "Email không được để trống",
+  (v: string) => /.+@.+\..+/.test(v) || "Email không đúng định dạng",
+];
 const passwordRules = [
-  (v: any) => !!v || 'Mật khẩu không được để trống',
-  (v: string | any[]) => (v && v.length >= 6 && v.length <= 12)
-    || 'Mật khẩu phải từ 6 đến 12 ký tự'
-]
+  (v: any) => !!v || "Mật khẩu không được để trống",
+  (v: string | any[]) =>
+    (v && v.length >= 6 && v.length <= 12) || "Mật khẩu phải từ 6 đến 12 ký tự",
+];
 
 const { loginBuyer } = authLoginApi();
 const auth = useAuthStore();
@@ -151,7 +196,7 @@ const doLogin = async () => {
     handleDologinError();
   }
 };
-const formRef = ref<any>(null)
+const formRef = ref<any>(null);
 const submitForm = async () => {
   const { valid } = await formRef.value.validate();
   if (!valid) return;
@@ -167,7 +212,7 @@ const message = ref("");
 const isSuccess = ref<boolean>(false);
 const handleDologinSucess = async (userMe: any) => {
   modelValue.value = false;
-  userStorage.value = JSON.stringify(userMe);
+  userStorage.value = userMe;
   showMessage.value = true;
   message.value = "Đăng nhập thành công";
   isSuccess.value = true;
@@ -180,9 +225,10 @@ const handleDologinError = () => {
 
 const handleRegisterError = () => {
   showMessage.value = true;
-  message.value = "Đăng ký tài khoản thất bại, địa chỉ email hoặc mật khẩu không hợp lệ hoặc email đã được sử dụng rồi."
+  message.value =
+    "Đăng ký tài khoản thất bại, địa chỉ email hoặc mật khẩu không hợp lệ hoặc email đã được sử dụng rồi.";
   isSuccess.value = false;
-}
+};
 </script>
 
 <style scoped>
