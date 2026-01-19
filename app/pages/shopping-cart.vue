@@ -110,11 +110,9 @@ const onQuantityChange = async (item: any, updateQuantity: number) => {
   }
   await getCartInfo();
 };
-const userStorage = useLocalStorage<any>("user_me", "");
+const userStorage = useLocalStorage<any>("user_me", "{}");
 const getUserId = () => {
-  const userId = computed(
-    () => JSON.parse(userStorage.value || "{}")?.userId ?? ""
-  );
+  const userId = computed(() => userStorage.value.userId ?? "");
   return userId.value;
 };
 const isLoginOk = () => {
