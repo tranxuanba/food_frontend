@@ -4,8 +4,16 @@
     <v-row>
       <v-col cols="1"></v-col>
       <v-col cols="10">
-        <AppHeaderMain v-if="!isOrderPage && useRoleName == 'BUYER' || useRoleName == ''" />
-        <AppMenu v-if="!isOrderPage && useRoleName == 'BUYER' || useRoleName == ''" />
+        <AppHeaderMain
+          v-if="
+            !isOrderPage && (useRoleName == 'BUYER' || useRoleName == '')
+          "
+        />
+        <AppMenu
+          v-if="
+            !isOrderPage && (useRoleName == 'BUYER' || useRoleName == '')
+          "
+        />
         <AppAdminMenu v-if="useRoleName == 'ADMIN'" />
         <main>
           <slot />
@@ -13,7 +21,11 @@
       </v-col>
       <v-col cols="1"></v-col>
     </v-row>
-    <AppFooter v-if="!isOrderPage && useRoleName == 'BUYER' || useRoleName == ''" />
+    <AppFooter
+      v-if="
+        !isOrderPage && (useRoleName == 'BUYER' || useRoleName == '')
+      "
+    />
   </div>
 </template>
 
@@ -25,10 +37,8 @@ import AppFooter from "../components/AppFooter.vue";
 import AppAdminMenu from "../components/AppAdminMenu.vue";
 import { useLocalStorage } from "@vueuse/core";
 
-const userStorage = useLocalStorage<any>("user_me", "");
-const useRoleName = computed(
-  () => JSON.parse(userStorage.value || "{}")?.roleName ?? ""
-);
+const userStorage = useLocalStorage<any>("user_me", "{}");
+const useRoleName = computed(() => userStorage.value.roleName ?? "");
 const route = useRoute();
 const isOrderPage = ref<boolean>(false);
 watch(
