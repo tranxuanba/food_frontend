@@ -153,7 +153,7 @@ const passwordRules = [
 const { loginBuyer } = authLoginApi();
 const auth = useAuthStore();
 const { getMe } = userApi();
-const userStorage = useLocalStorage<any>("user_me", "");
+const userStorage = useLocalStorage<any>("user_me", {});
 
 const modelValue = defineModel<boolean>({ required: true });
 const props = defineProps<{

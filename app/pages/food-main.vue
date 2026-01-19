@@ -132,7 +132,7 @@ const userId = ref<string>("");
 const foodIdCart = ref<number>(0);
 const totalCount = ref<number>(0);
 const isLoginOk = () => {
-  const userStorage = useLocalStorage<any>("user_me", "{}");
+  const userStorage = useLocalStorage<any>("user_me", {});
 
   const userStorageId = computed(() => userStorage.value.userId ?? "");
   if (userStorageId.value !== "") {

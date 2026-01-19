@@ -37,7 +37,7 @@ import AppFooter from "../components/AppFooter.vue";
 import AppAdminMenu from "../components/AppAdminMenu.vue";
 import { useLocalStorage } from "@vueuse/core";
 
-const userStorage = useLocalStorage<any>("user_me", "{}");
+const userStorage = useLocalStorage<any>("user_me", {});
 const useRoleName = computed(() => userStorage.value.roleName ?? "");
 const route = useRoute();
 const isOrderPage = ref<boolean>(false);

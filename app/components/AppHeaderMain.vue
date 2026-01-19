@@ -128,7 +128,7 @@ const { setTotalCount, setCartItemMes, useCartItemMes, totalCount } =
   useCartItemMeList();
 const { setFoods, setSearchFoodName, usePagination } = useFoodList();
 const { useSelectedCategories } = useCategoryList();
-const userStorage = useLocalStorage<any>("user_me", "{}");
+const userStorage = useLocalStorage<any>("user_me", {});
 const getUserId = () => {
   const userId = computed(() => userStorage.value.userId ?? "");
   return userId.value;

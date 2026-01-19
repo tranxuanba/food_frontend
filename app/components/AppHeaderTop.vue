@@ -72,7 +72,7 @@ const switchMode = (m: any) => {
   mode.value = m;
 };
 
-const userStorage = useLocalStorage<any>("user_me", "{}");
+const userStorage = useLocalStorage<any>("user_me", {});
 
 const loginUserName = computed(() => userStorage.value.username ?? "");
 if (loginUserName.value !== "") {

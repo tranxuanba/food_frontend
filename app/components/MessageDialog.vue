@@ -25,7 +25,7 @@ const props = defineProps<{
 }>();
 
 const emit = defineEmits(["update:messageDialog"]);
-const userStorage = useLocalStorage<any>("user_me", "{}");
+const userStorage = useLocalStorage<any>("user_me", {});
 const useRoleName = computed(() => userStorage.value.roleName ?? "");
 async function handleOk() {
   if (props.isSuccess) {
