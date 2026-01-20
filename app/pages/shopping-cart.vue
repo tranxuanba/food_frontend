@@ -36,6 +36,7 @@
             hide-details
             @update:model-value="(val) => onQuantityChange(item, val)"
             density="compact"
+            :min="1"
           ></v-number-input>
         </template>
 
@@ -102,7 +103,7 @@ const { setCartItemMes } = useCartItemMeList();
 const onQuantityChange = async (item: any, updateQuantity: number) => {
   if (isLoginOk()) {
     const index = userCartItemStorage.value.findIndex(
-      (cartItem: any) => cartItem.foodId === item.foodId
+      (cartItem: any) => cartItem.foodId === item.foodId,
     );
     userCartItemStorage.value[index].quantity = item.quantity;
   } else {
@@ -124,7 +125,7 @@ const isLoginOk = () => {
 const callCartMeUpdateApi = async (
   userId: string,
   foodId: number,
-  quantity: number
+  quantity: number,
 ) => {
   const updateToCartParam: any = {
     userId: userId,
@@ -140,13 +141,13 @@ const callCartMeUpdateApi = async (
 };
 const userCartItemStorage = useLocalStorage<CartMeLocalStorage[] | any>(
   "cart_me_localstorage",
-  []
+  [],
 );
 const totalCountLocalstorage = computed(() =>
   userCartItemStorage.value.reduce(
     (sum: any, item: any) => sum + item.quantity,
-    0
-  )
+    0,
+  ),
 );
 totalCount.value = totalCountLocalstorage.value;
 const cartItemList = ref<any[]>([]);
@@ -183,7 +184,7 @@ const callCartMeDeleteApi = async (cartItemId: number) => {
 const removeFoodInCart = async (cartItemId: any, foodId: any) => {
   if (isLoginOk()) {
     userCartItemStorage.value = userCartItemStorage.value.filter(
-      (item: any) => item.foodId !== foodId
+      (item: any) => item.foodId !== foodId,
     );
   } else {
     await callCartMeDeleteApi(cartItemId);
@@ -231,7 +232,7 @@ const headers = [
 
 const formatPrice = (v: number) => v.toLocaleString("vi-VN") + "đ";
 const totalPrice = computed(() =>
-  useCartItemMes.value.reduce((sum, i) => sum + i.price * i.quantity, 0)
+  useCartItemMes.value.reduce((sum, i) => sum + i.price * i.quantity, 0),
 );
 
 const continueShopping = async () => {
