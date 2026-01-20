@@ -2,7 +2,9 @@
   <v-dialog v-model="modelValue" max-width="900" persistent>
     <v-card>
       <!-- Close button -->
-      <v-card-title class="modal-title-custom text-white d-flex align-center justify-space-between">
+      <v-card-title
+        class="modal-title-custom text-white d-flex align-center justify-space-between"
+      >
         Chi tiết sản phẩm
         <v-btn icon @click="close()" variant="text">
           <v-icon class="text-white">mdi-close</v-icon>
@@ -40,12 +42,24 @@
           <div class="text-common d-flex align-center">
             <div class="d-flex align-center">
               <span class="mr-2">Số lượng</span>
-              <v-number-input inset variant="solo-filled" v-model="foodInfo.quantity" control-variant="split"
-                elevation="0" class="no-shadow-number" hide-details
-                @update:model-value="(val) => onQuantityChange(val)"></v-number-input>
+              <v-number-input
+                inset
+                variant="solo-filled"
+                v-model="foodInfo.quantity"
+                control-variant="split"
+                elevation="0"
+                class="no-shadow-number"
+                hide-details
+                @update:model-value="(val) => onQuantityChange(val)"
+                :min="1"
+              ></v-number-input>
             </div>
 
-            <v-btn color="#029d16" class="text-none ml-6" @click="addToCart(foodInfo, $event)">
+            <v-btn
+              color="#029d16"
+              class="text-none ml-6"
+              @click="addToCart(foodInfo, $event)"
+            >
               Mua hàng
             </v-btn>
           </div>
@@ -132,11 +146,11 @@ const addToCart = async (item: any, event: MouseEvent) => {
 };
 const userCartItemStorage = useLocalStorage<CartMeLocalStorage[] | any>(
   "cart_me_localstorage",
-  []
+  [],
 );
 const addToCartLocalstorage = (item: CartMeLocalStorage) => {
   const index = userCartItemStorage.value.findIndex(
-    (cartItem: any) => cartItem.foodId === item.foodId
+    (cartItem: any) => cartItem.foodId === item.foodId,
   );
 
   if (index !== -1) {
@@ -151,8 +165,8 @@ const addToCartLocalstorage = (item: CartMeLocalStorage) => {
 const totalCountLocalstorage = computed(() =>
   userCartItemStorage.value.reduce(
     (sum: any, item: any) => sum + item.quantity,
-    0
-  )
+    0,
+  ),
 );
 const cartItemList = ref<any[]>([]);
 const getTotalCount = async () => {
