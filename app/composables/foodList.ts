@@ -35,7 +35,7 @@ export const foodListApi = () => {
       {
         method: "POST",
         body: form,
-      }
+      },
     );
   };
 
@@ -65,6 +65,12 @@ export const useFoodList = () => {
       offset: 0,
     };
   };
+  const useFoodsLoading = useState<boolean>("foodsLoading", () => true);
+
+  const setFoodsLoading = (loading: boolean) => {
+    useFoodsLoading.value = loading;
+  };
+
   return {
     useFoods,
     setFoods,
@@ -72,6 +78,8 @@ export const useFoodList = () => {
     setSearchFoodName,
     usePagination,
     setPagination,
+    useFoodsLoading,
+    setFoodsLoading,
   };
 };
 
