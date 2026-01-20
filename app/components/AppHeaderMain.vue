@@ -71,6 +71,7 @@
                           (val) => onQuantityChange(item, val)
                         "
                         density="compact"
+                        :min="1"
                       ></v-number-input
                     ></v-col>
                   </v-row>
@@ -145,7 +146,7 @@ const shoppingCart = () => {
 const onQuantityChange = async (item: any, updateQuantity: number) => {
   if (isLoginOk()) {
     const index = userCartItemStorage.value.findIndex(
-      (cartItem: any) => cartItem.foodId === item.foodId
+      (cartItem: any) => cartItem.foodId === item.foodId,
     );
     userCartItemStorage.value[index].quantity = item.quantity;
   } else {
@@ -156,7 +157,7 @@ const onQuantityChange = async (item: any, updateQuantity: number) => {
 const callCartMeUpdateApi = async (
   userId: string,
   foodId: number,
-  quantity: number
+  quantity: number,
 ) => {
   const updateToCartParam: any = {
     userId: userId,
@@ -172,13 +173,13 @@ const callCartMeUpdateApi = async (
 };
 const userCartItemStorage = useLocalStorage<CartMeLocalStorage[] | any>(
   "cart_me_localstorage",
-  []
+  [],
 );
 const totalCountLocalstorage = computed(() =>
   userCartItemStorage.value.reduce(
     (sum: any, item: any) => sum + item.quantity,
-    0
-  )
+    0,
+  ),
 );
 totalCount.value = totalCountLocalstorage.value;
 
@@ -216,7 +217,7 @@ const callCartMeDeleteApi = async (cartItemId: number) => {
 const removeFoodInCart = async (cartItemId: any, foodId: any) => {
   if (isLoginOk()) {
     userCartItemStorage.value = userCartItemStorage.value.filter(
-      (item: any) => item.foodId !== foodId
+      (item: any) => item.foodId !== foodId,
     );
   } else {
     await callCartMeDeleteApi(cartItemId);
@@ -235,7 +236,7 @@ watch(
     await nextTick();
     cartIcon.value = el ?? null;
   },
-  { immediate: true }
+  { immediate: true },
 );
 
 const onSearch = () => {
@@ -253,7 +254,7 @@ watch(
   () => usePagination.value.offset,
   (newVal) => {
     getFoodList();
-  }
+  },
 );
 
 const foods = ref<any[]>([]);
