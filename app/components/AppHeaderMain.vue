@@ -127,7 +127,12 @@ const { cartIcon } = useCartIcon();
 const route = useRoute();
 const { setTotalCount, setCartItemMes, useCartItemMes, totalCount } =
   useCartItemMeList();
-const { setFoods, setSearchFoodName, usePagination } = useFoodList();
+const {
+  setFoods,
+  setSearchFoodName,
+  usePagination,
+  setFoodsLoading,
+} = useFoodList();
 const { useSelectedCategories } = useCategoryList();
 const userStorage = useLocalStorage<any>("user_me", {});
 const getUserId = () => {
@@ -259,6 +264,7 @@ watch(
 
 const foods = ref<any[]>([]);
 const getFoodList = async () => {
+  setFoodsLoading(true);
   const searchForm: any = {
     categoryIds:
       useSelectedCategories.value.length == 0
@@ -275,6 +281,8 @@ const getFoodList = async () => {
     setSearchFoodName(keyword.value);
   } catch (err) {
     console.error("Fetch food error", err);
+  } finally {
+    setFoodsLoading(false);
   }
 };
 function handleShoppingCart() {
