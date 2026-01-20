@@ -19,45 +19,52 @@
     </v-col>
     <v-col>
       <v-row class="food-cart pt-3 pr-3">
-        <v-col class="pa-0" v-for="item in useFoods" :key="item.foodId">
-          <v-card
-            class="product-card"
-            elevation="0"
-            variant="outlined"
-            rounded="lg"
-          >
-            <v-img :src="item.imageUrl" aspect-ratio="1" contain />
-            <v-card-text class="text-center pt-3">
-              <v-tooltip activator="parent" location="top">
-                {{ item.foodName }}
-              </v-tooltip>
-              <div class="text-ellipsis">
-                {{ item.foodName }}
-              </div>
-            </v-card-text>
-            <v-card-actions class="px-3 pb-3">
-              <div class="text-green">
-                {{ formatPrice(item.price) }}
-              </div>
-              <v-spacer />
-              <v-btn
-                icon
-                variant="text"
-                @click="showProductDialog(item.foodId)"
-              >
-                <v-icon>mdi-eye-outline</v-icon>
-              </v-btn>
-              <v-btn
-                icon
-                variant="text"
-                color="success"
-                @click="addToCart(item, $event)"
-              >
-                <v-icon>mdi-cart-plus</v-icon>
-              </v-btn>
-            </v-card-actions>
-          </v-card>
-        </v-col>
+        <template v-if="useFoodsLoading">
+          <v-col v-for="n in 10" :key="'skeleton-' + n" class="pa-0">
+            <FoodSkeleton />
+          </v-col>
+        </template>
+        <template v-else>
+          <v-col class="pa-0" v-for="item in useFoods" :key="item.foodId">
+            <v-card
+              class="product-card"
+              elevation="0"
+              variant="outlined"
+              rounded="lg"
+            >
+              <v-img :src="item.imageUrl" aspect-ratio="1" contain />
+              <v-card-text class="text-center pt-3">
+                <v-tooltip activator="parent" location="top">
+                  {{ item.foodName }}
+                </v-tooltip>
+                <div class="text-ellipsis">
+                  {{ item.foodName }}
+                </div>
+              </v-card-text>
+              <v-card-actions class="px-3 pb-3">
+                <div class="text-green">
+                  {{ formatPrice(item.price) }}
+                </div>
+                <v-spacer />
+                <v-btn
+                  icon
+                  variant="text"
+                  @click="showProductDialog(item.foodId)"
+                >
+                  <v-icon>mdi-eye-outline</v-icon>
+                </v-btn>
+                <v-btn
+                  icon
+                  variant="text"
+                  color="success"
+                  @click="addToCart(item, $event)"
+                >
+                  <v-icon>mdi-cart-plus</v-icon>
+                </v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-col>
+        </template>
       </v-row>
       <v-row>
         <Pagination
@@ -88,7 +95,7 @@ import { ref, onMounted } from "vue";
 import ProductDialog from "../components/ProductDialog.vue";
 
 const { setTotalCount, setCartItemMes } = useCartItemMeList();
-const { useFoods, setPagination } = useFoodList();
+const { useFoods, setPagination, useFoodsLoading } = useFoodList();
 const { setUseCategoryes, setSelectedCategories, useSelectedCategories } =
   useCategoryList();
 const showDialog = ref(false);
@@ -113,7 +120,7 @@ watch(
       totalItems.value = val[0].totalCount;
     }
   },
-  { immediate: true }
+  { immediate: true },
 );
 
 const pagination = ref<any>({
@@ -143,11 +150,11 @@ const isLoginOk = () => {
 };
 const userCartItemStorage = useLocalStorage<CartMeLocalStorage[] | any>(
   "cart_me_localstorage",
-  []
+  [],
 );
 const addToCartLocalstorage = (item: CartMeLocalStorage) => {
   const index = userCartItemStorage.value.findIndex(
-    (cartItem: any) => cartItem.foodId === item.foodId
+    (cartItem: any) => cartItem.foodId === item.foodId,
   );
 
   if (index !== -1) {
@@ -224,8 +231,8 @@ const flyToCart = (sourceEl: HTMLElement) => {
 const totalCountLocalstorage = computed(() =>
   userCartItemStorage.value.reduce(
     (sum: any, item: any) => sum + item.quantity,
-    0
-  )
+    0,
+  ),
 );
 const cartItemList = ref<any[]>([]);
 const getTotalCount = async () => {
