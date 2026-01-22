@@ -3,47 +3,17 @@
     <v-card elevation="0">
       <v-row>
         <v-col cols="3">
-          <v-text-field
-            color="green"
-            v-model="keyword"
-            density="compact"
-            label="Tìm kiếm theo tên loại sản phẩm"
-            variant="outlined"
-            hide-details
-            single-line
-          ></v-text-field>
+          <v-text-field color="green" v-model="keyword" density="compact" label="Tìm kiếm theo tên loại sản phẩm"
+            variant="outlined" hide-details single-line></v-text-field>
         </v-col>
-        <v-col cols="3"
-          ><v-select
-            color="green"
-            :items="categories"
-            item-title="categoryName"
-            item-value="categoryId"
-            variant="outlined"
-            density="compact"
-            v-model="selectCategoryIds"
-            single-line
-            multiple
-            label="Tìm theo loại sản phẩm"
-          ></v-select
-        ></v-col>
-        <v-col cols="1"
-          ><v-btn
-            color="#029d16"
-            class="ml-2 text-none"
-            variant="flat"
-            @click="onSearch()"
-          >
+        <v-col cols="3"><v-select color="green" :items="categories" item-title="categoryName" item-value="categoryId"
+            variant="outlined" density="compact" v-model="selectCategoryIds" single-line multiple
+            label="Tìm theo loại sản phẩm"></v-select></v-col>
+        <v-col cols="1"><v-btn color="#029d16" class="ml-2 text-none" variant="flat" @click="onSearch()">
             Tìm kiếm
-          </v-btn></v-col
-        >
+          </v-btn></v-col>
       </v-row>
-      <v-data-table
-        :headers="headers"
-        :items="foods"
-        item-key="id"
-        hide-default-footer
-      >
+      <v-data-table :headers="headers" :items="foods" item-key="id" hide-default-footer>
         <template #no-data>
           <div class="text-center py-6 text-common">
             Danh sách sản phẩm đang trống
@@ -63,7 +33,9 @@
           </span>
         </template>
         <template #item.discountPrice="{ item }">
-          <span class="price">
+          <span v-if="
+            item.discountPrice !== null && item.discountPrice !== ''
+          " class="price">
             {{ formatPrice(item.discountPrice) }}
           </span>
         </template>
@@ -78,39 +50,24 @@
           </span>
         </template>
         <template #item.actions="{ item }">
-          <v-btn
-            icon
-            variant="text"
-            color="red-lighten-1"
-            @click="removeFood(item.foodId)"
-          >
+          <v-btn icon variant="text" color="red-lighten-1" @click="removeFood(item.foodId)">
             <v-icon>mdi-delete</v-icon>
           </v-btn>
         </template>
       </v-data-table>
-      <Pagination
-        v-model:pagination="pagination"
-        :totalItems="foods[0]?.totalCount"
-        @update:pagination="handlePaginationUpdate"
-      />
+      <Pagination v-model:pagination="pagination" :totalItems="foods[0]?.totalCount"
+        @update:pagination="handlePaginationUpdate" />
     </v-card>
 
     <div class="items-right mt-6">
-      <v-btn
-        color="#029d16"
-        class="ml-2 text-none"
-        variant="flat"
-        @click="addFood()"
-      >
+      <v-btn color="#029d16" class="ml-2 text-none" variant="flat" @click="addFood()">
         Thêm sản phẩm
       </v-btn>
     </div>
   </v-container>
   <v-dialog persistent v-model="foodDialog" max-width="700">
     <v-card>
-      <v-card-title
-        class="modal-title-custom text-white d-flex align-center justify-space-between"
-      >
+      <v-card-title class="modal-title-custom text-white d-flex align-center justify-space-between">
         {{ isUpdateFood ? "Thay đổi sản phẩm" : "Thêm sản phẩm" }}
         <v-btn icon @click="foodDialog = false" variant="text">
           <v-icon class="text-white">mdi-close</v-icon>
@@ -124,110 +81,61 @@
             <v-row v-if="isUpdateFood">
               <v-col>
                 <label class="input-label text-common">Id sản phẩm</label>
-                <v-text-field
-                  density="compact"
-                  v-model="foodId"
-                  variant="outlined"
-                  hide-details="auto"
-                  disabled
-                ></v-text-field>
+                <v-text-field density="compact" v-model="foodId" variant="outlined" hide-details="auto"
+                  disabled></v-text-field>
               </v-col>
             </v-row>
             <v-row>
               <v-col>
                 <label class="input-label text-common">Tên sản phẩm</label>
-                <v-text-field
-                  density="compact"
-                  v-model="foodName"
-                  variant="outlined"
-                  :rules="foodNameRules"
-                  hide-details="auto"
-                ></v-text-field>
+                <v-text-field density="compact" v-model="foodName" variant="outlined" :rules="foodNameRules"
+                  hide-details="auto"></v-text-field>
               </v-col>
             </v-row>
             <v-row>
               <v-col>
                 <label class="input-label text-common">Hình minh họa</label>
-                <v-file-input
-                  density="compact"
-                  v-model="foodImage"
-                  label="Chọn ảnh upload"
-                  accept="image/*"
-                  prepend-icon="mdi-camera"
-                  variant="outlined"
-                  hide-details="auto"
-                  single-line
-                  :rules="isUpdateFood ? [] : [(v) => !!v || 'Vui lòng chọn ảnh']"
-                />
+                <v-file-input density="compact" v-model="foodImage" label="Chọn ảnh upload" accept="image/*"
+                  prepend-icon="mdi-camera" variant="outlined" hide-details="auto" single-line
+                  :rules="isUpdateFood ? [] : [(v) => !!v || 'Vui lòng chọn ảnh']" />
               </v-col>
             </v-row>
             <v-row>
               <v-col>
                 <label class="input-label text-common">Tên sản phẩm</label>
-                <v-select
-                  :items="categories"
-                  item-title="categoryName"
-                  item-value="categoryId"
-                  variant="outlined"
-                  density="compact"
-                  v-model="categoryId"
-                  single-line
-                  label="Chọn loại sản phẩm"
-                  :rules="[(v) => !!v || 'Vui lòng chọn loại sản phẩm']"
-                ></v-select>
+                <v-select :items="categories" item-title="categoryName" item-value="categoryId" variant="outlined"
+                  density="compact" v-model="categoryId" single-line label="Chọn loại sản phẩm"
+                  :rules="[(v) => !!v || 'Vui lòng chọn loại sản phẩm']"></v-select>
               </v-col>
             </v-row>
             <v-row>
               <v-col>
                 <label class="input-label text-common">Giá</label>
-                <v-text-field
-                  density="compact"
-                  v-model="price"
-                  variant="outlined"
-                  hide-details="auto"
-                  type="number"
-                  :rules="priceRules"
-                ></v-text-field>
+                <v-text-field density="compact" v-model="price" variant="outlined" hide-details="auto" type="number"
+                  :rules="priceRules"></v-text-field>
               </v-col>
             </v-row>
             <v-row>
               <v-col>
                 <label class="input-label text-common">Giá khuyến mại</label>
-                <v-text-field
-                  density="compact"
-                  v-model="discountPrice"
-                  variant="outlined"
-                  hide-details="auto"
-                  type="number"
-                  :rules="discountPriceRules"
-                ></v-text-field>
+                <v-text-field density="compact" v-model="discountPrice" variant="outlined" hide-details="auto"
+                  type="number" :rules="discountPriceRules"></v-text-field>
               </v-col>
             </v-row>
             <v-row>
               <v-col>
                 <label class="input-label text-common">Số lượng</label>
-                <v-text-field
-                  density="compact"
-                  v-model="quantity"
-                  variant="outlined"
-                  hide-details="auto"
-                  type="number"
+                <v-text-field density="compact" v-model="quantity" variant="outlined" hide-details="auto" type="number"
                   :rules="[
                     (v) => (v !== null && v !== '') || 'Vui lòng số lượng',
                     (v) => !isNaN(v) || 'Số lượng phải là số',
-                  ]"
-                ></v-text-field>
+                  ]"></v-text-field>
               </v-col>
             </v-row>
             <v-row>
               <v-col>
                 <label class="input-label text-common">Mô tả</label>
-                <v-textarea
-                  density="compact"
-                  v-model="description"
-                  variant="outlined"
-                  hide-details="auto"
-                ></v-textarea>
+                <v-textarea density="compact" v-model="description" variant="outlined" hide-details="auto"></v-textarea>
               </v-col>
             </v-row>
             <v-row>
@@ -239,13 +147,7 @@
                 </v-radio-group>
               </v-col>
             </v-row>
-            <v-btn
-              @click="addUpdateCategory()"
-              block
-              color="#029d16"
-              size="large"
-              class="text-none"
-            >
+            <v-btn @click="addUpdateCategory()" block color="#029d16" size="large" class="text-none">
               {{ isUpdateFood ? "Cập nhật sản phẩm" : "Thêm sản phẩm" }}
             </v-btn>
           </v-col>
@@ -260,11 +162,8 @@
         {{ message }}
       </v-card-text>
       <v-card-actions class="my-2 d-flex justify-center">
-        <v-btn
-          :class="isSuccess ? 'text-success' : 'text-error'"
-          :text="isSuccess ? 'OK' : 'Trở về'"
-          @click="handleOk"
-        />
+        <v-btn :class="isSuccess ? 'text-success' : 'text-error'" :text="isSuccess ? 'OK' : 'Trở về'"
+          @click="handleOk" />
       </v-card-actions>
     </v-card>
   </v-dialog>

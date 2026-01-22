@@ -1,7 +1,7 @@
 <template>
   <v-container style="background-color: #029d16; color: white; margin-bottom: 15px">
     <template v-for="(menu, index) in menus" :key="index">
-      <v-btn class="text-none" v-if="!menu.children" variant="text" :to="menu.to">
+      <v-btn class="text-none" v-if="!menu.children" variant="text" :to="menu.to" :active="isActiveMenu(menu)">
         {{ menu.title }}
       </v-btn>
       <v-menu v-else :open-on-click="true" location="bottom" offset="8">
@@ -31,8 +31,18 @@ import { useCategoryList } from "../composables/categoryList";
 const { useCategoryes, setSelectedCategories } = useCategoryList();
 
 const menus = computed(() => [
-  { title: "Trang chủ", to: "/food-main" },
-  { title: "Khuyến mãi" },
+  {
+    title: "Trang chủ", to: {
+      path: "/food-main",
+      query: { discount: "0" },
+    },
+  },
+  {
+    title: "Khuyến mãi", to: {
+      path: "/food-main",
+      query: { discount: "1" },
+    },
+  },
   {
     title: "Sản phẩm",
     children: useCategoryes.value,
@@ -48,5 +58,20 @@ const menus = computed(() => [
 const onClickCategory = async (categoryId: number[]) => {
   setSelectedCategories(categoryId);
 };
+const route = useRoute()
+
+const isActiveMenu = (menu: any) => {
+  if (!menu.to) return false
+
+  const menuPath = menu.to.path
+  const menuDiscount = menu.to.query?.discount ?? "0"
+  const currentDiscount = route.query.discount ?? "0"
+
+  return (
+    route.path === menuPath &&
+    menuDiscount === currentDiscount
+  )
+}
+
 </script>
 <style scoped></style>

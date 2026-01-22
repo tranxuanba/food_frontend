@@ -1,7 +1,7 @@
 <template>
   <v-row class="mt-2">
     <v-col cols="7" class="payment-col1">
-      <v-row class="pt-3">
+      <v-row class="pt-0 pb-4">
         <v-col cols="5">
           <v-img :width="200" aspect-ratio="16/9" contain :src="LogoBaDung" />
         </v-col>
@@ -9,108 +9,66 @@
       <v-form ref="formOrder">
         <v-row>
           <v-col cols="6">
-            <v-row
-              ><span class="text-common text-bold pl-3"
-                >Thông tin nhận hàng</span
-              ></v-row
-            >
+            <v-row><span class="text-common text-bold pl-3">Thông tin nhận hàng</span></v-row>
             <v-divider class="my-4" />
             <v-row>
               <v-col>
                 <label class="input-label text-common">Tên người nhận</label>
-                <v-text-field
-                  v-model="receiveName"
-                  variant="outlined"
-                  hide-details="auto"
-                  :rules="[(v) => !!v || 'Tên người nhận không được để trống']"
-                ></v-text-field>
+                <v-text-field v-model="receiveName" variant="outlined" hide-details="auto"
+                  :rules="[(v) => !!v || 'Tên người nhận không được để trống']"></v-text-field>
               </v-col>
             </v-row>
             <v-row>
               <v-col>
                 <label class="input-label text-common">Email</label>
-                <v-text-field
-                  v-model="email"
-                  variant="outlined"
-                  hide-details="auto"
-                  :rules="[
-                    (v) => !!v || 'Email không được để trống',
-                    (v) => /.+@.+\..+/.test(v) || 'Email không đúng định dạng',
-                  ]"
-                ></v-text-field>
+                <v-text-field v-model="email" variant="outlined" hide-details="auto" :rules="[
+                  (v) => !!v || 'Email không được để trống',
+                  (v) => /.+@.+\..+/.test(v) || 'Email không đúng định dạng',
+                ]"></v-text-field>
               </v-col>
             </v-row>
             <v-row>
               <v-col>
                 <label class="input-label text-common">Số điện thoại</label>
-                <v-text-field
-                  v-model="phoneNumber"
-                  variant="outlined"
-                  hide-details="auto"
-                  type="tel"
-                  :rules="[
-                    (v) => !!v || 'Số điện thoại không được để trống',
-                    (v) => /^[0-9]+$/.test(v) || 'Chỉ được nhập số',
-                  ]"
-                ></v-text-field>
+                <v-text-field v-model="phoneNumber" variant="outlined" hide-details="auto" type="tel" :rules="[
+                  (v) => !!v || 'Số điện thoại không được để trống',
+                  (v) => /^[0-9]+$/.test(v) || 'Chỉ được nhập số',
+                ]"></v-text-field>
               </v-col>
             </v-row>
             <v-row>
               <v-col class="pb-0">
                 <label class="input-label text-common">Địa chỉ</label>
-                <v-select
-                  placeholder="Chọn tỉnh/thành phố trực thuộc trung ương"
-                  v-model="province"
-                  :items="provinces"
-                  item-title="name"
-                  item-value="code"
-                  variant="outlined"
-                  :rules="[(v) => !!v || 'Vui lòng chọn tỉnh/thành phố']"
-                />
+                <v-select placeholder="Chọn tỉnh/thành phố trực thuộc trung ương" v-model="province" :items="provinces"
+                  item-title="name" item-value="code" variant="outlined"
+                  :rules="[(v) => !!v || 'Vui lòng chọn tỉnh/thành phố']" />
               </v-col>
             </v-row>
             <v-row>
               <v-col class="py-0">
-                <v-select
-                  placeholder="Chọn xã/phường/đặc khu"
-                  v-model="ward"
-                  :items="wards"
-                  item-title="name"
-                  item-value="code"
-                  variant="outlined"
-                  :disabled="!province"
-                  :rules="[(v) => !!v || 'Vui lòng chọn xã/phường/đặc khu']"
-                />
+                <v-select placeholder="Chọn xã/phường/đặc khu" v-model="ward" :items="wards" item-title="name"
+                  item-value="code" variant="outlined" :disabled="!province"
+                  :rules="[(v) => !!v || 'Vui lòng chọn xã/phường/đặc khu']" />
               </v-col>
             </v-row>
             <v-row>
               <v-col class="py-0">
-                <v-text-field
-                  placeholder="Số nhà/phòng, ngách/hẻm, ngõ/kiệt, đường/phố/đại lộ, tổ/xóm/ấp/thôn"
-                  v-model="street"
-                  variant="outlined"
-                  :rules="[
+                <v-text-field placeholder="Số nhà/phòng, ngách/hẻm, ngõ/kiệt, đường/phố/đại lộ, tổ/xóm/ấp/thôn"
+                  v-model="street" variant="outlined" :rules="[
                     (v) =>
                       (!!v && v.trim().length > 0) || 'Không được để trống',
-                  ]"
-                />
+                  ]" />
               </v-col>
             </v-row>
             <v-row>
               <v-col>
                 <label class="input-label text-common">Ghi chú</label>
-                <v-textarea
-                  v-model="note"
-                  variant="outlined"
-                  hide-details="auto"
-                ></v-textarea>
+                <v-textarea v-model="note" variant="outlined" hide-details="auto"></v-textarea>
               </v-col>
             </v-row>
           </v-col>
           <v-col cols="6">
-            <v-row
-              ><span class="text-common text-bold pl-3">Vận chuyển</span></v-row
-            >
+            <v-row><span class="text-common text-bold pl-3">Vận chuyển</span></v-row>
             <v-divider class="my-4" />
             <v-row>
               <v-col>
@@ -121,43 +79,24 @@
             </v-row>
             <v-row>
               <v-col>
-                <v-row class="pt-4"
-                  ><span class="text-common text-bold pl-3"
-                    >Phương thức thanh toán</span
-                  ></v-row
-                >
+                <v-row class="pt-4"><span class="text-common text-bold pl-3">Phương thức thanh toán</span></v-row>
                 <v-divider class="my-4" />
                 <div class="payment-custom">
                   <v-radio-group v-model="paymentMethod" hide-details>
-                    <v-radio
-                      class="text-common"
-                      label="Thanh toán khi giao hàng (COD)"
-                      value="0"
-                    />
+                    <v-radio class="text-common" label="Thanh toán khi giao hàng (COD)" value="0" />
                   </v-radio-group>
                 </div>
               </v-col>
             </v-row>
-          </v-col> </v-row
-      ></v-form>
+          </v-col> </v-row></v-form>
     </v-col>
     <v-col cols="5">
-      <v-row class="pt-4"
-        ><span class="text-common text-bold pl-3"
-          >Đơn hàng ({{ totalCount }} sản phẩm)</span
-        ></v-row
-      >
+      <v-row class="pt-4"><span class="text-common text-bold pl-3">Đơn hàng ({{ totalCount }} sản phẩm)</span></v-row>
       <v-divider class="my-4" />
       <v-row>
         <v-col>
-          <v-data-table
-            :headers="headers"
-            :items="cartItemList"
-            item-key="id"
-            hide-default-header
-            hide-default-footer
-            class="cart-table"
-          >
+          <v-data-table :headers="headers" :items="cartItemList" item-key="id" hide-default-header hide-default-footer
+            class="cart-table">
             <!-- Cột hình + badge -->
             <template #item.imageUrl="{ item }">
               <div class="image-wrapper">
@@ -176,7 +115,8 @@
             <!-- Cột giá -->
             <template #item.price="{ item }">
               <div class="product-price">
-                {{ formatPrice(item.price * item.quantity) }}
+                {{ item.discountPrice != null ? formatPrice(item.discountPrice * item.quantity) : formatPrice(item.price
+                  * item.quantity) }}
               </div>
             </template>
           </v-data-table>
@@ -184,23 +124,13 @@
       </v-row>
       <v-divider class="my-4" />
       <v-row>
-        <v-col cols="8"
-          ><v-text-field
-            v-model="orderVoucher"
-            placeholder="Nhập mã giảm giá"
-            variant="outlined"
-            hide-details="auto"
-          ></v-text-field
-        ></v-col>
+        <v-col cols="8"><v-text-field v-model="orderVoucher" placeholder="Nhập mã giảm giá" variant="outlined"
+            hide-details="auto"></v-text-field></v-col>
         <v-col cols="4">
-          <v-btn
-            class="btn-shopping-cart text-none"
-            size="x-large"
-            text="Áp dụng"
-            :disabled="orderVoucher == ''"
-          />
+          <v-btn class="btn-shopping-cart text-none" size="x-large" text="Áp dụng" :disabled="orderVoucher == ''" />
         </v-col>
       </v-row>
+      <v-row v-if="isLoginOk()" class="pb-2"><span class="text-common font-italic px-3">※Vui lòng đăng nhập để nhận mã giảm giá</span></v-row>
       <v-divider class="my-4" />
       <v-row class="text-common">
         <v-col cols="6"><span>Tạm tính</span></v-col>
@@ -220,31 +150,16 @@
         }}</v-col>
       </v-row>
       <v-row class="text-common pb-4">
-        <v-col cols="6"
-          ><v-btn
-            color="rgb(35 163 5)"
-            variant="text"
-            class="text-none"
-            @click="backToShoppingCart()"
-          >
+        <v-col cols="6"><v-btn color="rgb(35 163 5)" variant="text" class="text-none" @click="backToShoppingCart()">
             <v-icon start icon="mdi-arrow-left" />
             Quay về giỏ hàng
-          </v-btn></v-col
-        >
-        <v-col cols="6" class="total-price"
-          ><v-btn
-            class="btn-shopping-cart text-none"
-            text="Đặt hàng"
-            @click="order()"
-        /></v-col>
+          </v-btn></v-col>
+        <v-col cols="6" class="total-price"><v-btn class="btn-shopping-cart text-none" text="Đặt hàng"
+            @click="order()" /></v-col>
       </v-row>
     </v-col>
   </v-row>
-  <MessageDialog
-    v-model="showMessage"
-    :message="message"
-    :isSuccess="isSuccess"
-  />
+  <MessageDialog v-model="showMessage" :message="message" :isSuccess="isSuccess" />
 </template>
 
 <script setup lang="ts">
@@ -316,9 +231,9 @@ const getCartInfo = async () => {
     }
   }
   totalPrice.value = cartItemList.value.reduce(
-    (sum, i) => sum + i.price * i.quantity,
-    0,
-  );
+    (sum, i) => sum + (i.discountPrice ?? i.price) * i.quantity,
+    0
+  )
 };
 
 const province = ref(null);
@@ -357,7 +272,7 @@ const cartMeOrderList = computed(() =>
     foodId: item.foodId,
     cartItemId: item.cartItemId,
     quantity: item.quantity,
-    price: item.price,
+    price: item.discountPrice != null ? item.discountPrice : item.price,
   })),
 );
 

@@ -4,38 +4,17 @@
       <div class="">
         <v-img :width="200" aspect-ratio="16/9" contain :src="LogoBaDung" />
       </div>
-      <v-text-field
-        color="green"
-        v-model="keyword"
-        density="compact"
-        label="Tìm kiếm..."
-        variant="outlined"
-        style="max-width: 400px"
-        append-inner-icon="mdi-magnify"
-        hide-details
-        single-line
-        @click:append-inner="onSearch"
-      ></v-text-field>
-      <v-menu
-        open-on-hover
-        location="bottom"
-        offset="4"
-        :open-on-click="false"
-        :close-on-content-click="false"
-      >
+      <v-text-field v-if="!isCartPage" color="green" v-model="keyword" density="compact" label="Tìm kiếm..." variant="outlined"
+        style="max-width: 400px" append-inner-icon="mdi-magnify" hide-details single-line
+        @click:append-inner="onSearch"></v-text-field>
+      <v-menu v-if="!isCartPage" open-on-hover location="bottom" offset="4" :open-on-click="false"
+        :close-on-content-click="false">
         <template #activator="{ props }">
           <span ref="cartRef">
-            <v-btn
-              class="text-none"
-              v-bind="props"
-              color="#029d16"
-              variant="flat"
-              @click="shoppingCart"
-            >
+            <v-btn class="text-none" v-bind="props" color="#029d16" variant="flat" @click="shoppingCart">
               <v-icon start>mdi-cart-outline</v-icon>
               Giỏ hàng ({{ totalCount }})
-            </v-btn></span
-          >
+            </v-btn></span>
         </template>
 
         <v-card min-width="400" max-height="700">
@@ -43,8 +22,7 @@
             <v-card-text class="text-common">
               <v-row class="pa-2 d-flex align-center">
                 <v-col>Giỏ hàng trống</v-col>
-              </v-row></v-card-text
-            >
+              </v-row></v-card-text>
           </div>
           <div v-else>
             <v-card-text class="text-common">
@@ -58,37 +36,19 @@
                   </v-row>
                   <v-row class="ps-4 pt-1 d-flex align-center">
                     <v-col cols="5" class="px-0"><span>Số lượng: </span></v-col>
-                    <v-col cols="7" class="px-0"
-                      ><v-number-input
-                        inset
-                        variant="solo-filled"
-                        v-model="item.quantity"
-                        control-variant="split"
-                        elevation="0"
-                        class="no-shadow-number"
-                        hide-details
-                        @update:model-value="
+                    <v-col cols="7" class="px-0"><v-number-input inset variant="solo-filled" v-model="item.quantity"
+                        control-variant="split" elevation="0" class="no-shadow-number" hide-details @update:model-value="
                           (val) => onQuantityChange(item, val)
-                        "
-                        density="compact"
-                        :min="1"
-                      ></v-number-input
-                    ></v-col>
+                        " density="compact" :min="1"></v-number-input></v-col>
                   </v-row>
-                  <v-row class="pb-1 ps-4"
-                    >Giá:
+                  <v-row class="pb-1 ps-4">Giá:
                     <span class="price">{{
-                      formatPrice(item.price)
-                    }}</span></v-row
-                  >
+                      item.discountPrice != null ? formatPrice(item.discountPrice) : formatPrice(item.price)
+                    }}</span></v-row>
                 </v-col>
                 <v-col cols="1">
-                  <v-btn
-                    icon
-                    variant="text"
-                    color="red-lighten-1"
-                    @click="removeFoodInCart(item.cartItemId, item.foodId)"
-                  >
+                  <v-btn icon variant="text" color="red-lighten-1"
+                    @click="removeFoodInCart(item.cartItemId, item.foodId)">
                     <v-icon style="font-size: 25px">mdi-close-circle</v-icon>
                   </v-btn>
                 </v-col>
@@ -96,16 +56,8 @@
               </v-row>
             </v-card-text>
             <v-card-actions class="mb-2 d-flex justify-center">
-              <v-btn
-                class="btn-shopping-cart text-none"
-                text="Giỏ hàng"
-                @click="handleShoppingCart"
-              />
-              <v-btn
-                class="btn-payment-cart text-none"
-                text="Thanh toán"
-                @click="handlePayment"
-              />
+              <v-btn class="btn-shopping-cart text-none" text="Giỏ hàng" @click="handleShoppingCart" />
+              <v-btn class="btn-payment-cart text-none" text="Thanh toán" @click="handlePayment" />
             </v-card-actions>
           </div>
         </v-card>
@@ -121,6 +73,9 @@ import { ref } from "vue";
 import { useLocalStorage } from "@vueuse/core";
 import { useCartItemMeList } from "../composables/cartItemMe";
 
+const isCartPage = computed(() => {
+  return route.path === "/shopping-cart"
+})
 const cartRef = ref<HTMLElement | null>();
 const { cartIcon } = useCartIcon();
 
@@ -131,8 +86,22 @@ const {
   setFoods,
   setSearchFoodName,
   usePagination,
-  setFoodsLoading,
+  setFoodsLoading, useDiscountPriceFlag, setDiscountPriceFlag, setPagination
 } = useFoodList();
+const discountFlag = computed(() => {
+  return route.query.discount === "1" ? "1" : "0"
+})
+watch(discountFlag, (newVal) => {
+  if (newVal) {
+    setDiscountPriceFlag(newVal);
+    setPagination(pagination);
+  }
+});
+const pagination = ref<any>({
+  page: 1,
+  limit: 10,
+  offset: 0,
+});
 const { useSelectedCategories } = useCategoryList();
 const userStorage = useLocalStorage<any>("user_me", {});
 const getUserId = () => {
@@ -200,7 +169,7 @@ const getCartInfo = async () => {
     try {
       const { cartItemMeList } = cartItemMeListApi();
       cartItemList.value = await cartItemMeList(cartParam);
-      totalCount.value = cartItemList.value[0].totalCount ?? 0;
+      totalCount.value = cartItemList.value.length > 0 ? cartItemList.value[0].totalCount : 0;
     } catch (err) {
       console.error("Fetch food error", err);
     }
@@ -247,6 +216,13 @@ watch(
 const onSearch = () => {
   getFoodList();
 };
+watch(
+  () => route.query.discount,
+  () => {
+    getFoodList();
+  }
+)
+
 watch(useSelectedCategories, (newVal) => {
   if (newVal) {
     getFoodList();
@@ -271,6 +247,7 @@ const getFoodList = async () => {
         ? null
         : useSelectedCategories.value,
     foodName: keyword.value,
+    discountPriceFlag: useDiscountPriceFlag.value,
     limit: usePagination.value.limit ?? 10,
     offset: usePagination.value.offset ?? 0,
   };
@@ -343,16 +320,20 @@ const formatPrice = (price: any) => price.toLocaleString("vi-VN") + "đ";
   box-shadow: none !important;
   background-color: #fff !important;
 }
+
 @keyframes cart-bounce {
   0% {
     transform: scale(1);
   }
+
   30% {
     transform: scale(1.25);
   }
+
   60% {
     transform: scale(0.95);
   }
+
   100% {
     transform: scale(1);
   }

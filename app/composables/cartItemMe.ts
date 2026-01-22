@@ -7,6 +7,7 @@ export interface CartMeResponse {
   foodName: string;
   imageUrl: string;
   price: number;
+  discountPrice: number;
   quantity: number;
   totalPrice: number;
   totalCount: number;

@@ -1,6 +1,7 @@
 export interface FoodSearchRequest {
   categoryIds?: number[];
   foodName?: string;
+  discountPriceFlag: string;
 }
 export interface FoodListResponse {
   foodId: number;
@@ -72,6 +73,12 @@ export const useFoodList = () => {
     useFoodsLoading.value = loading;
   };
 
+  const useDiscountPriceFlag = useState<string>("discountPriceFlag", () => "0");
+
+  const setDiscountPriceFlag = (discountPriceFlag?: string) => {
+    useDiscountPriceFlag.value = discountPriceFlag ?? "0";
+  };
+
   return {
     useFoods,
     setFoods,
@@ -81,6 +88,8 @@ export const useFoodList = () => {
     setPagination,
     useFoodsLoading,
     setFoodsLoading,
+    useDiscountPriceFlag,
+    setDiscountPriceFlag
   };
 };
 
