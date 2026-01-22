@@ -14,7 +14,17 @@
       <v-row class="mx-0 my-0">
         <!-- Image -->
         <v-col cols="12" md="6" class="pa-0">
-          <v-img :src="foodInfo.imageUrl" aspect-ratio="1" contain />
+          <v-img :src="foodInfo.imageUrl" aspect-ratio="1" contain>
+            <v-badge
+              class="badge-custom"
+              v-if="hasDiscount(foodInfo)"
+              :content="`-${discountPercent(foodInfo)}%`"
+              color="error"
+              location="top start"
+              offset-x="50"
+              offset-y="10"
+            />
+          </v-img>
         </v-col>
 
         <!-- Content -->
@@ -28,7 +38,23 @@
             </v-chip>
           </div>
 
-          <div class="price mb-4">{{ formatPrice(foodInfo.price) }}</div>
+          <div
+            :class="
+              foodInfo.discountPrice !== null && foodInfo.discountPrice !== ''
+                ? 'text-grey text-decoration-line-through price mb-2'
+                : 'price mb-4'
+            "
+          >
+            {{ formatPrice(foodInfo.price) }}
+          </div>
+          <div
+            v-if="
+              foodInfo.discountPrice !== null && foodInfo.discountPrice !== ''
+            "
+            class="price mb-4"
+          >
+            {{ formatPrice(foodInfo.discountPrice) }}
+          </div>
 
           <p class="text-body-2 text-common mb-4 text-break">
             {{ foodInfo.description }}
@@ -131,14 +157,16 @@ const addToCart = async (item: any, event: MouseEvent) => {
       foodId: item.foodId,
       foodName: item.foodName,
       imageUrl: item.imageUrl,
-      price: item.price,
+      price: item.discountPrice != null ? item.discountPrice : item.price,
       quantity: quantityChange.value,
     });
   } else {
     await callCartMeUpdateApi(userId.value, item.foodId);
     foodNameCart.value = item.foodName;
     imageUrlCart.value = item.imageUrl;
-    priceCart.value = formatPrice(item.price);
+    priceCart.value = formatPrice(
+      item.discountPrice != null ? item.discountPrice : item.price,
+    );
     foodIdCart.value = item.foodId;
   }
   await getTotalCount();
@@ -246,6 +274,18 @@ const flyToCart = (sourceEl: HTMLElement) => {
     flyEl.remove();
   }, 700);
 };
+
+const hasDiscount = (foodInfo: any) =>
+  foodInfo.discountPrice !== null &&
+  foodInfo.discountPrice !== "" &&
+  Number(foodInfo.discountPrice) < Number(foodInfo.price);
+
+const discountPercent = (foodInfo: any) => {
+  if (!hasDiscount(foodInfo)) return 0;
+  return Math.round(
+    (1 - Number(foodInfo.discountPrice) / Number(foodInfo.price)) * 100,
+  );
+};
 </script>
 
 <style scoped>
@@ -262,5 +302,14 @@ const flyToCart = (sourceEl: HTMLElement) => {
 
 .text-break {
   white-space: break-spaces !important;
+}
+
+.badge-custom ::v-deep(.v-badge__badge) {
+  border-top-left-radius: 0% !important;
+  border-bottom-left-radius: 0% !important;
+  font-size: 20px !important;
+  padding: 4px 8px !important;
+  min-width: unset;
+  height: auto;
 }
 </style>
