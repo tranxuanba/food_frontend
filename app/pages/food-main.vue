@@ -32,7 +32,17 @@
               variant="outlined"
               rounded="lg"
             >
-              <v-img :src="item.imageUrl" aspect-ratio="1" contain />
+              <v-img :src="item.imageUrl" aspect-ratio="1" contain>
+                <v-badge
+                  class="badge-custom"
+                  v-if="hasDiscount(item)"
+                  :content="`-${discountPercent(item)}%`"
+                  color="error"
+                  location="top start"
+                  offset-x="50"
+                  offset-y="10"
+                />
+              </v-img>
               <v-card-text class="text-center pt-3">
                 <v-tooltip activator="parent" location="top">
                   {{ item.foodName }}
@@ -42,8 +52,24 @@
                 </div>
               </v-card-text>
               <v-card-actions class="px-3 pb-3">
-                <div class="text-green">
-                  {{ formatPrice(item.price) }}
+                <div class="d-flex flex-column">
+                  <div
+                    :class="
+                      item.discountPrice !== null && item.discountPrice !== ''
+                        ? 'text-grey text-decoration-line-through'
+                        : 'text-green'
+                    "
+                  >
+                    {{ formatPrice(item.price) }}
+                  </div>
+                  <div
+                    v-if="
+                      item.discountPrice !== null && item.discountPrice !== ''
+                    "
+                    class="text-green"
+                  >
+                    {{ formatPrice(item.discountPrice) }}
+                  </div>
                 </div>
                 <v-spacer />
                 <v-btn
@@ -175,14 +201,16 @@ const addToCart = async (item: any, event: MouseEvent) => {
       foodId: item.foodId,
       foodName: item.foodName,
       imageUrl: item.imageUrl,
-      price: item.price,
+      price: item.discountPrice != null ? item.discountPrice : item.price,
       quantity: 1,
     });
   } else {
     await callCartMeUpdateApi(userId.value, item.foodId);
     foodNameCart.value = item.foodName;
     imageUrlCart.value = item.imageUrl;
-    priceCart.value = formatPrice(item.price);
+    priceCart.value = formatPrice(
+      item.discountPrice != null ? item.discountPrice : item.price,
+    );
     foodIdCart.value = item.foodId;
   }
   await getTotalCount();
@@ -306,6 +334,18 @@ watch(useSelectedCategories, (newVal) => {
     selectedCategories.value = newVal;
   }
 });
+
+const hasDiscount = (item: any) =>
+  item.discountPrice !== null &&
+  item.discountPrice !== "" &&
+  Number(item.discountPrice) < Number(item.price);
+
+const discountPercent = (item: any) => {
+  if (!hasDiscount(item)) return 0;
+  return Math.round(
+    (1 - Number(item.discountPrice) / Number(item.price)) * 100,
+  );
+};
 </script>
 
 <style scoped>
@@ -331,6 +371,7 @@ watch(useSelectedCategories, (newVal) => {
 .product-card {
   transition: 0.2s ease;
   border: 1px solid #eee;
+  overflow: visible;
 }
 
 .food-cart {
@@ -343,11 +384,24 @@ watch(useSelectedCategories, (newVal) => {
   color: #029d16;
 }
 
+.price-discount {
+  color: #029d16;
+}
+
 .text-ellipsis {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   max-width: 13rem !important;
   text-align: center !important;
+}
+
+.badge-custom ::v-deep(.v-badge__badge) {
+  border-top-left-radius: 0% !important;
+  border-bottom-left-radius: 0% !important;
+  font-size: 20px !important;
+  padding: 4px 8px !important;
+  min-width: unset;
+  height: auto;
 }
 </style>
