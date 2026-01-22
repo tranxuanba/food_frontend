@@ -10,6 +10,7 @@ export interface FoodListResponse {
   quantity: number;
   status: string;
   price: number;
+  discountPrice: number;
   imageUrl: string;
   totalCount: number;
 }
@@ -88,6 +89,7 @@ export interface FoodInsertRequest {
   foodName: string;
   description: string;
   price: number;
+  discountPrice: number;
   quantity: number;
   status: string;
   foodImage: File;
@@ -119,6 +121,7 @@ export interface FoodUpdateRequest {
   foodName: string;
   description: string;
   price: number;
+  discountPrice: number;
   quantity: number;
   status: string;
   foodImage: File;
