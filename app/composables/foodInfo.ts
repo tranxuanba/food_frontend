@@ -6,6 +6,7 @@ export interface FoodDetailResponse {
   foodName: string;
   status: string;
   price: number;
+  discountPrice: number;
   description: string;
   categoryName: string;
   quantity: number;
