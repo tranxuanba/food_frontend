@@ -2,7 +2,12 @@
   <v-container>
     <!-- Data table -->
     <v-card elevation="0">
-      <v-data-table :headers="headers" :items="cartItemList" item-key="id" hide-default-footer>
+      <v-data-table
+        :headers="headers"
+        :items="cartItemList"
+        item-key="id"
+        hide-default-footer
+      >
         <!-- No data -->
         <template #no-data>
           <div class="text-center py-6 text-common">
@@ -16,28 +21,48 @@
 
         <!-- Price -->
         <template #item.price="{ item }">
-          <span class="price">{{ item.discountPrice != null ? formatPrice(item.discountPrice) : formatPrice(item.price)
+          <span class="price">{{
+            item.discountPrice != null
+              ? formatPrice(item.discountPrice)
+              : formatPrice(item.price)
           }}</span>
         </template>
 
         <!-- Quantity -->
         <template #item.quantity="{ item }">
-          <v-number-input inset variant="solo-filled" v-model="item.quantity" control-variant="split" elevation="0"
-            class="no-shadow-number" hide-details @update:model-value="(val) => onQuantityChange(item, val)"
-            density="compact" :min="1"></v-number-input>
+          <v-number-input
+            inset
+            variant="solo-filled"
+            v-model="item.quantity"
+            control-variant="split"
+            elevation="0"
+            class="no-shadow-number"
+            hide-details
+            @update:model-value="(val) => onQuantityChange(item, val)"
+            density="compact"
+            :min="1"
+          ></v-number-input>
         </template>
 
         <!-- Total -->
         <template #item.total="{ item }">
           <span class="price">
-            {{ item.discountPrice != null ? formatPrice(item.discountPrice * item.quantity) : formatPrice(item.price *
-              item.quantity) }}
+            {{
+              item.discountPrice != null
+                ? formatPrice(item.discountPrice * item.quantity)
+                : formatPrice(item.price * item.quantity)
+            }}
           </span>
         </template>
 
         <!-- Delete -->
         <template #item.actions="{ item }">
-          <v-btn icon variant="text" color="red-lighten-1" @click="removeFoodInCart(item.cartItemId, item.foodId)">
+          <v-btn
+            icon
+            variant="text"
+            color="red-lighten-1"
+            @click="removeFoodInCart(item.cartItemId, item.foodId)"
+          >
             <v-icon>mdi-delete</v-icon>
           </v-btn>
         </template>
@@ -47,16 +72,27 @@
     <!-- Footer -->
     <div class="d-flex justify-space-between align-center mt-6">
       <div>
-        <span class="mr-2 text-common">Tổng tiền:</span><span class="font-weight-bold price">{{
+        <span class="mr-2 text-common">Tổng tiền:</span
+        ><span class="font-weight-bold price">{{
           formatPrice(totalPrice)
         }}</span>
       </div>
       <div class="d-flex gap-3">
-        <v-btn class="text-none" color="#9c9696" variant="flat" @click="continueShopping()">
-          Tiếp tục mua hàng
+        <v-btn
+          class="text-none"
+          color="#9c9696"
+          variant="flat"
+          @click="continueShopping()"
+        >
+          Mua hàng
         </v-btn>
-        <v-btn color="#029d16" class="ml-2 text-none" variant="flat" @click="placeOrder()">
-          Tiến hành đặt hàng
+        <v-btn
+          color="#029d16"
+          class="ml-2 text-none"
+          variant="flat"
+          @click="placeOrder()"
+        >
+          Đặt hàng
         </v-btn>
       </div>
     </div>
@@ -185,7 +221,7 @@ const headers = [
   {
     title: "Số lượng",
     key: "quantity",
-    headerProps: { class: "font-weight-bold text-common" },
+    headerProps: { class: "font-weight-bold text-common quantity-style" },
   },
   {
     title: "Thành tiền",
@@ -206,9 +242,9 @@ const formatPrice = (v: number) => v.toLocaleString("vi-VN") + "đ";
 const totalPrice = computed(() =>
   useCartItemMes.value.reduce(
     (sum, i) => sum + (i.discountPrice ?? i.price) * i.quantity,
-    0
-  )
-)
+    0,
+  ),
+);
 
 const continueShopping = async () => {
   await navigateTo("/food-main");
@@ -250,7 +286,12 @@ const placeOrder = () => {
 .no-shadow-number ::v-deep(.v-field) {
   box-shadow: none !important;
   background-color: #fff !important;
-  max-width: 150px !important;
+  max-width: 75px !important;
+}
+
+/* nút + / - */
+.no-shadow-number ::v-deep(.v-number-input__control) {
+  max-width: 25px !important;
 }
 
 .price {
