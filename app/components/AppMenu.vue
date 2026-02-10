@@ -1,7 +1,15 @@
 <template>
-  <v-container style="background-color: #029d16; color: white; margin-bottom: 15px">
+  <v-container
+    style="background-color: #029d16; color: white; padding: unset;"
+  >
     <template v-for="(menu, index) in menus" :key="index">
-      <v-btn class="text-none" v-if="!menu.children" variant="text" :to="menu.to" :active="isActiveMenu(menu)">
+      <v-btn
+        class="text-none"
+        v-if="!menu.children"
+        variant="text"
+        :to="menu.to"
+        :active="isActiveMenu(menu)"
+      >
         {{ menu.title }}
       </v-btn>
       <v-menu v-else :open-on-click="true" location="bottom" offset="8">
@@ -14,7 +22,11 @@
 
         <v-card width="300">
           <v-list>
-            <v-list-item v-for="item in menu.children" :key="item.categoryId" @click="onClickCategory(item.categoryId)">
+            <v-list-item
+              v-for="item in menu.children"
+              :key="item.categoryId"
+              @click="onClickCategory(item.categoryId)"
+            >
               {{ item.categoryName }}
             </v-list-item>
           </v-list>
@@ -32,13 +44,15 @@ const { useCategoryes, setSelectedCategories } = useCategoryList();
 
 const menus = computed(() => [
   {
-    title: "Trang chủ", to: {
+    title: "Trang chủ",
+    to: {
       path: "/food-main",
       query: { discount: "0" },
     },
   },
   {
-    title: "Khuyến mãi", to: {
+    title: "Khuyến mãi",
+    to: {
       path: "/food-main",
       query: { discount: "1" },
     },
@@ -58,20 +72,16 @@ const menus = computed(() => [
 const onClickCategory = async (categoryId: number[]) => {
   setSelectedCategories(categoryId);
 };
-const route = useRoute()
+const route = useRoute();
 
 const isActiveMenu = (menu: any) => {
-  if (!menu.to) return false
+  if (!menu.to) return false;
 
-  const menuPath = menu.to.path
-  const menuDiscount = menu.to.query?.discount ?? "0"
-  const currentDiscount = route.query.discount ?? "0"
+  const menuPath = menu.to.path;
+  const menuDiscount = menu.to.query?.discount ?? "0";
+  const currentDiscount = route.query.discount ?? "0";
 
-  return (
-    route.path === menuPath &&
-    menuDiscount === currentDiscount
-  )
-}
-
+  return route.path === menuPath && menuDiscount === currentDiscount;
+};
 </script>
 <style scoped></style>
