@@ -1,30 +1,25 @@
 <template>
-  <div>
+  <div class="app-layout">
     <AppHeaderTop />
-    <v-row>
-      <v-col cols="1"></v-col>
-      <v-col cols="10">
-        <AppHeaderMain
-          v-if="
-            !isOrderPage && (useRoleName == 'BUYER' || useRoleName == '')
-          "
-        />
-        <AppMenu
-          v-if="
-            !isOrderPage && (useRoleName == 'BUYER' || useRoleName == '')
-          "
-        />
-        <AppAdminMenu v-if="useRoleName == 'ADMIN'" />
-        <main>
-          <slot />
-        </main>
-      </v-col>
-      <v-col cols="1"></v-col>
-    </v-row>
+
+    <div class="page-container">
+      <AppHeaderMain
+        v-if="!isOrderPage && (useRoleName === 'BUYER' || useRoleName === '')"
+      />
+
+      <AppMenu
+        v-if="!isOrderPage && (useRoleName === 'BUYER' || useRoleName === '')"
+      />
+
+      <AppAdminMenu v-if="useRoleName === 'ADMIN'" />
+
+      <main class="page-content">
+        <slot />
+      </main>
+    </div>
+
     <AppFooter
-      v-if="
-        !isOrderPage && (useRoleName == 'BUYER' || useRoleName == '')
-      "
+      v-if="!isOrderPage && (useRoleName === 'BUYER' || useRoleName === '')"
     />
   </div>
 </template>
@@ -39,20 +34,40 @@ import { useLocalStorage } from "@vueuse/core";
 
 const userStorage = useLocalStorage<any>("user_me", {});
 const useRoleName = computed(() => userStorage.value.roleName ?? "");
+
 const route = useRoute();
-const isOrderPage = ref<boolean>(false);
+const isOrderPage = ref(false);
+
 watch(
   () => route.fullPath,
-  (newPath) => {
-    isOrderPage.value = newPath.includes("order-page");
+  (path) => {
+    isOrderPage.value = path.includes("order-page");
   },
-  { immediate: true }
+  { immediate: true },
 );
 </script>
 
 <style>
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
+.app-layout {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.page-container {
+  max-width: 80%;
+  margin:auto;
+  width: 100%;
+}
+
+.page-content {
+  min-height: 60vh;
+}
+
+/* Mobile */
+@media (max-width: 600px) {
+  .page-container {
+    max-width: 100%;
+  }
 }
 </style>
