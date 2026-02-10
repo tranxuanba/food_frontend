@@ -1,9 +1,8 @@
 <template>
-  <NuxtLayout>
-    <NuxtPage :key="$route.fullPath"/>
-  </NuxtLayout>
+  <v-app>
+    <NuxtLayout>
+      <NuxtPage :key="$route.fullPath" /> </NuxtLayout
+  ></v-app>
 </template>
 
-<script setup lang="ts">
-// app.vue chỉ dùng NuxtLayout + NuxtPage
-</script>
+<script setup lang="ts"></script>
