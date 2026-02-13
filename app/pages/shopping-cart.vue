@@ -97,6 +97,8 @@
       </div>
     </div>
   </v-container>
+  <router-view />
+  <ContactFab />
 </template>
 
 <script setup lang="ts">
