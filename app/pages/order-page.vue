@@ -249,6 +249,8 @@
       </v-row>
     </v-col>
   </v-row>
+  <router-view />
+  <ContactFab />
   <MessageDialog
     v-model="showMessage"
     :message="message"
