@@ -104,6 +104,8 @@
     </v-col>
   </v-row>
   <div class="category-page"></div>
+  <router-view />
+  <ContactFab />
   <ProductDialog v-model="showDialog" :food_info="foodDetail" />
 </template>
 
