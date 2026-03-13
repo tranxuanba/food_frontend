@@ -56,7 +56,7 @@ watch(
 
 .page-container {
   max-width: 80%;
-  margin:auto;
+  margin: 0 auto;
   width: 100%;
 }
 
