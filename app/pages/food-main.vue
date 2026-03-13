@@ -390,7 +390,7 @@ const discountPercent = (item: any) => {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 8rem !important;
+  max-width: 12rem !important;
   text-align: center !important;
 }
 
