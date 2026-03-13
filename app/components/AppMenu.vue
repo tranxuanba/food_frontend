@@ -1,7 +1,5 @@
 <template>
-  <v-container
-    style="background-color: #029d16; color: white; padding: unset;"
-  >
+  <v-container style="background-color: #029d16; color: white; padding: unset">
     <template v-for="(menu, index) in menus" :key="index">
       <v-btn
         class="text-none"
@@ -63,7 +61,10 @@ const menus = computed(() => [
   },
   {
     title: "Sản phẩm nổi bật",
-    children: useCategoryes.value,
+    to: {
+      path: "/food-main",
+      query: { bestSellerFlag: "1" },
+    },
   },
   { title: "Giới thiệu" },
   { title: "Tin tức" },
@@ -78,10 +79,20 @@ const isActiveMenu = (menu: any) => {
   if (!menu.to) return false;
 
   const menuPath = menu.to.path;
-  const menuDiscount = menu.to.query?.discount ?? "0";
-  const currentDiscount = route.query.discount ?? "0";
+  const menuQuery = menu.to.query || {};
 
-  return route.path === menuPath && menuDiscount === currentDiscount;
+  if (route.path !== menuPath) return false;
+
+  // nếu menu có discount
+  if ("discount" in menuQuery) {
+    if (route.query.discount !== menuQuery.discount) return false;
+  }
+
+  // nếu menu có bestSellerFlag
+  if ("bestSellerFlag" in menuQuery) {
+    if (route.query.bestSellerFlag !== menuQuery.bestSellerFlag) return false;
+  }
+  return true;
 };
 </script>
 <style scoped></style>
