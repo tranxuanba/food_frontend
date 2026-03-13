@@ -2,7 +2,9 @@
   <v-container class="px-0 py-2">
     <div class="header-main">
       <div class="">
-        <v-img :width="200" aspect-ratio="16/9" contain :src="LogoBaDung" />
+        <NuxtLink to="/food-main">
+          <v-img :width="200" aspect-ratio="16/9" contain :src="LogoBaDung" />
+        </NuxtLink>
       </div>
       <v-text-field
         v-if="!isCartPage"
@@ -148,6 +150,8 @@ const {
   setFoodsLoading,
   useDiscountPriceFlag,
   setDiscountPriceFlag,
+  useBestSellerFlag,
+  setBestSellerFlag,
   setPagination,
 } = useFoodList();
 const discountFlag = computed(() => {
@@ -156,6 +160,15 @@ const discountFlag = computed(() => {
 watch(discountFlag, (newVal) => {
   if (newVal) {
     setDiscountPriceFlag(newVal);
+    setPagination(pagination);
+  }
+});
+const bestSellerFlag = computed(() => {
+  return route.query.bestSeller === "1" ? "1" : "0";
+});
+watch(bestSellerFlag, (newVal) => {
+  if (newVal) {
+    setBestSellerFlag(newVal);
     setPagination(pagination);
   }
 });
@@ -311,6 +324,7 @@ const getFoodList = async () => {
         : useSelectedCategories.value,
     foodName: keyword.value,
     discountPriceFlag: useDiscountPriceFlag.value,
+    bestSellerFlag: useBestSellerFlag.value,
     limit: usePagination.value.limit ?? 10,
     offset: usePagination.value.offset ?? 0,
   };
