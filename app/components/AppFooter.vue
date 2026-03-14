@@ -1,10 +1,10 @@
 <template>
-  <v-footer class="app-footer ps-0 pe-0" color="#029d16">
+  <v-footer class="app-footer ps-0 pe-0" color="#707070">
     <v-container class="p-0">
       <v-row dense class="footer-row">
         <!-- CỘT 1 -->
         <v-col cols="12" md="3" class="footer-col">
-          <v-list bg-color="#029d16">
+          <v-list bg-color="#707070">
             <v-list-subheader class="text-footer footer-title">
               Shop nhà Ba Dung
             </v-list-subheader>
@@ -20,7 +20,7 @@
 
         <!-- CỘT 2 -->
         <v-col cols="12" md="3" class="footer-col category-sub">
-          <v-list bg-color="#029d16">
+          <v-list bg-color="#707070">
             <v-list-subheader class="text-footer sub-title">
               Danh mục sản phẩm
             </v-list-subheader>
@@ -42,7 +42,7 @@
 
         <!-- CỘT 3 -->
         <v-col cols="12" md="3" class="footer-col category-sub">
-          <v-list bg-color="#029d16">
+          <v-list bg-color="#707070">
             <v-list-subheader class="text-footer sub-title">
               Hỗ trợ khách hàng
             </v-list-subheader>
@@ -58,7 +58,7 @@
 
         <!-- CỘT 4 -->
         <v-col cols="12" md="3" class="footer-col category-sub">
-          <v-list bg-color="#029d16">
+          <v-list bg-color="#707070">
             <v-list-subheader class="text-footer sub-title">
               Về chúng tôi
             </v-list-subheader>

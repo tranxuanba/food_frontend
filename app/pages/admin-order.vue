@@ -3,53 +3,24 @@
     <v-card elevation="0">
       <v-row class="d-flex align-center pb-2">
         <v-col cols="3">
-          <v-text-field
-            color="green"
-            v-model="transactionCodeKey"
-            density="compact"
-            label="Tìm theo mã đơn hàng"
-            variant="outlined"
-            hide-details
-            single-line
-          ></v-text-field>
+          <v-text-field color="green" v-model="transactionCodeKey" density="compact" label="Tìm theo mã đơn hàng"
+            variant="outlined" hide-details single-line></v-text-field>
         </v-col>
         <v-col cols="3">
           <v-row>
             <v-col>
-              <v-checkbox
-                hide-details
-                v-model="paymentStatusKey"
-                label="Chưa thanh toán"
-                value="0"
-              />
+              <v-checkbox hide-details v-model="paymentStatusKey" label="Chưa thanh toán" value="0" />
             </v-col>
             <v-col>
-              <v-checkbox
-                hide-details
-                v-model="paymentStatusKey"
-                label="Đã thanh toán"
-                value="1"
-              />
+              <v-checkbox hide-details v-model="paymentStatusKey" label="Đã thanh toán" value="1" />
             </v-col>
           </v-row>
         </v-col>
-        <v-col cols="1"
-          ><v-btn
-            color="#029d16"
-            class="ml-2 text-none"
-            variant="flat"
-            @click="onSearch()"
-          >
+        <v-col cols="1"><v-btn color="#029d16" class="ml-2 text-none" variant="flat" @click="onSearch()">
             Tìm kiếm
-          </v-btn></v-col
-        >
+          </v-btn></v-col>
       </v-row>
-      <v-data-table
-        :headers="headers"
-        :items="orderList"
-        item-key="id"
-        hide-default-footer
-      >
+      <v-data-table :headers="headers" :items="orderList" item-key="id" hide-default-footer>
         <template #no-data>
           <div class="text-center py-6 text-common">
             Danh sách đơn hàng đang trống
@@ -57,10 +28,7 @@
         </template>
         <template #item.orderFoodName="{ item }">
           <div>
-            <div
-              v-for="(food, index) in splitFoodNameList(item.orderFoodName)"
-              :key="index"
-            >
+            <div v-for="(food, index) in splitFoodNameList(item.orderFoodName)" :key="index">
               {{ index + 1 }} - {{ food }}
             </div>
           </div>
@@ -70,12 +38,8 @@
         </template>
 
         <template #item.paymentStatus="{ item }">
-          <v-radio-group
-            hide-details
-            inline
-            v-model="item.paymentStatus"
-            @update:modelValue="(val) => updatePaymentStatus(item.orderId, val)"
-          >
+          <v-radio-group hide-details inline v-model="item.paymentStatus"
+            @update:modelValue="(val) => updatePaymentStatus(item.orderId, val)">
             <v-radio label="Chưa thanh toán" value="0"></v-radio>
             <v-radio label="Đã thanh toán" value="1"></v-radio>
           </v-radio-group>
@@ -86,11 +50,8 @@
           </span>
         </template>
       </v-data-table>
-      <Pagination
-        v-model:pagination="pagination"
-        :totalItems="orderList[0]?.totalCount"
-        @update:pagination="handlePaginationUpdate"
-      />
+      <Pagination v-model:pagination="pagination" :totalItems="orderList[0]?.totalCount"
+        @update:pagination="handlePaginationUpdate" />
     </v-card>
   </v-container>
   <v-dialog v-model="messageDialog" max-width="500" persistent>
@@ -99,11 +60,8 @@
         {{ message }}
       </v-card-text>
       <v-card-actions class="my-2 d-flex justify-center">
-        <v-btn
-          :class="isSuccess ? 'text-success' : 'text-error'"
-          :text="isSuccess ? 'OK' : 'Trở về'"
-          @click="handleOk"
-        />
+        <v-btn :class="isSuccess ? 'text-success' : 'text-error'" :text="isSuccess ? 'OK' : 'Trở về'"
+          @click="handleOk" />
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -275,6 +233,7 @@ const resetPagination = () => {
   cursor: pointer;
   color: #029d16;
 }
+
 .price {
   color: #f57c00;
 }

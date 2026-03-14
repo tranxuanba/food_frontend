@@ -2,18 +2,12 @@
   <v-row class="ma-0">
     <v-col class="category-col" cols="2">
       <v-card elevation="0" class="product-filter" variant="outlined">
-        <v-sheet color="#029d16" class="px-4 py-2 text-white font-weight-bold">
+        <v-sheet color="#828282" class="px-4 py-2 text-white font-weight-bold">
           Danh mục
         </v-sheet>
         <v-card-text>
-          <v-checkbox
-            v-for="item in categories"
-            :key="item.categoryId"
-            v-model="selectedCategories"
-            :label="item.categoryName"
-            :value="item.categoryId"
-            hide-details
-          />
+          <v-checkbox v-for="item in categories" :key="item.categoryId" v-model="selectedCategories"
+            :label="item.categoryName" :value="item.categoryId" hide-details />
         </v-card-text>
       </v-card>
     </v-col>
@@ -26,22 +20,10 @@
         </template>
         <template v-else>
           <v-col class="pa-0" v-for="item in useFoods" :key="item.foodId">
-            <v-card
-              class="product-card"
-              elevation="0"
-              variant="outlined"
-              rounded="lg"
-            >
+            <v-card class="product-card" elevation="0" variant="outlined" rounded="lg">
               <v-img :src="item.imageUrl" aspect-ratio="1" contain>
-                <v-badge
-                  class="badge-custom"
-                  v-if="hasDiscount(item)"
-                  :content="`-${discountPercent(item)}%`"
-                  color="error"
-                  location="top start"
-                  offset-x="50"
-                  offset-y="10"
-                />
+                <v-badge class="badge-custom" v-if="hasDiscount(item)" :content="`-${discountPercent(item)}%`"
+                  location="top start" offset-x="50" offset-y="10" />
               </v-img>
               <v-card-text class="text-center pt-3">
                 <v-tooltip activator="parent" location="top">
@@ -51,43 +33,26 @@
                   {{ item.foodName }}
                 </div>
               </v-card-text>
-              <v-card-actions
-                class="px-3 pb-3 d-flex"
-                style="justify-content: space-between"
-              >
+              <v-card-actions class="px-3 pb-3 d-flex" style="justify-content: space-between">
                 <div class="d-flex flex-column">
-                  <div
-                    :class="
-                      item.discountPrice !== null && item.discountPrice !== ''
-                        ? 'text-grey text-decoration-line-through'
-                        : 'text-green'
-                    "
-                  >
+                  <div :class="item.discountPrice !== null && item.discountPrice !== ''
+                    ? 'text-grey text-decoration-line-through'
+                    : 'text-green'
+                    ">
                     {{ formatPrice(item.price) }}
                   </div>
-                  <div
-                    v-if="
-                      item.discountPrice !== null && item.discountPrice !== ''
-                    "
-                    class="text-green"
-                  >
+                  <div v-if="
+                    item.discountPrice !== null && item.discountPrice !== ''
+                  " class="text-green">
                     {{ formatPrice(item.discountPrice) }}
                   </div>
                 </div>
-                <v-btn
-                  icon
-                  variant="text"
-                  @click="showProductDialog(item.foodId)"
-                >
-                  <v-icon>mdi-eye-outline</v-icon>
+                <v-btn icon variant="text" @click="showProductDialog(item.foodId)">
+                  <v-icon color="deep-orange">mdi-eye-outline</v-icon>
                 </v-btn>
-                <v-btn
-                  icon
-                  variant="text"
-                  color="success"
-                  @click="addToCart(item, $event)"
-                >
-                  <v-icon>mdi-cart-plus</v-icon>
+                <v-btn icon variant="text" style="background-color: rgba(255,87,34,.1);"
+                  @click="addToCart(item, $event)">
+                  <v-icon color="deep-orange">mdi-cart-plus</v-icon>
                 </v-btn>
               </v-card-actions>
             </v-card>
@@ -95,11 +60,8 @@
         </template>
       </v-row>
       <v-row>
-        <Pagination
-          v-model:pagination="pagination"
-          :totalItems="totalItems"
-          @update:pagination="handlePaginationUpdate"
-        />
+        <Pagination v-model:pagination="pagination" :totalItems="totalItems"
+          @update:pagination="handlePaginationUpdate" />
       </v-row>
     </v-col>
   </v-row>
@@ -379,11 +341,11 @@ const discountPercent = (item: any) => {
 }
 
 .text-green {
-  color: #029d16;
+  color: #ff5722 !important;
 }
 
 .price-discount {
-  color: #029d16;
+  color: #ff5722 !important;
 }
 
 .text-ellipsis {
@@ -401,31 +363,38 @@ const discountPercent = (item: any) => {
   padding: 4px 8px !important;
   min-width: unset;
   height: auto;
+  background-color: #ee4d2d !important;
 }
+
 @media (max-width: 1100px) {
   .category-col {
     display: none;
   }
+
   .food-cart {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 8px;
   }
 }
+
 @media (max-width: 945px) {
   .category-col {
     display: none;
   }
+
   .food-cart {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 8px;
   }
 }
+
 @media (max-width: 600px) {
   .category-col {
     display: none;
   }
+
   .food-cart {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));

@@ -53,34 +53,17 @@
 
     <!-- RIGHT -->
     <div class="right">
-      <v-btn
-        class="text-none"
-        variant="text"
-        size="small"
-        @click="authClick(true)"
-      >
+      <v-btn class="text-none" variant="text" size="small" @click="authClick(true)">
         <v-icon start>mdi-login</v-icon>
         {{ loginUserName || "Đăng nhập" }}
       </v-btn>
 
-      <v-btn
-        v-if="!loginOk"
-        class="text-none"
-        variant="text"
-        size="small"
-        @click="authClick(false)"
-      >
+      <v-btn v-if="!loginOk" class="text-none" variant="text" size="small" @click="authClick(false)">
         <v-icon start>mdi-account-plus</v-icon>
         Đăng ký
       </v-btn>
 
-      <v-btn
-        v-if="loginOk"
-        class="text-none"
-        variant="text"
-        size="small"
-        @click="logoutClick"
-      >
+      <v-btn v-if="loginOk" class="text-none" variant="text" size="small" @click="logoutClick">
         <v-icon start>mdi-logout</v-icon>
         Đăng xuất
       </v-btn>
@@ -132,7 +115,7 @@ const logoutClick = async () => {
 
 <style scoped>
 .top-bar {
-  background: #029d16;
+  background: #828282;
   color: #fff;
   display: flex;
   align-items: center;
@@ -165,7 +148,8 @@ const logoutClick = async () => {
   }
 
   .mobile-info {
-    display: none; /* ẨN LUÔN NÚT MORE */
+    display: none;
+    /* ẨN LUÔN NÚT MORE */
   }
 
   .hotline-full {
@@ -180,6 +164,7 @@ const logoutClick = async () => {
     padding: 4px 8px;
   }
 }
+
 /* MOBILE */
 @media (max-width: 945px) {
   .desktop-info {
@@ -187,7 +172,8 @@ const logoutClick = async () => {
   }
 
   .mobile-info {
-    display: none; /* ẨN LUÔN NÚT MORE */
+    display: none;
+    /* ẨN LUÔN NÚT MORE */
   }
 
   .hotline-full {
@@ -202,13 +188,15 @@ const logoutClick = async () => {
     padding: 4px 8px;
   }
 }
+
 @media (max-width: 600px) {
   .desktop-info {
     display: none;
   }
 
   .mobile-info {
-    display: none; /* ẨN LUÔN NÚT MORE */
+    display: none;
+    /* ẨN LUÔN NÚT MORE */
   }
 
   .hotline-full {

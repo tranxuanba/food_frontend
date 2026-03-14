@@ -2,9 +2,7 @@
   <v-dialog v-model="modelValue" max-width="900" persistent>
     <v-card>
       <!-- Close button -->
-      <v-card-title
-        class="modal-title-custom text-white d-flex align-center justify-space-between"
-      >
+      <v-card-title class="modal-title-custom text-white d-flex align-center justify-space-between">
         Chi tiết sản phẩm
         <v-btn icon @click="close()" variant="text">
           <v-icon class="text-white">mdi-close</v-icon>
@@ -15,15 +13,8 @@
         <!-- Image -->
         <v-col cols="12" md="6" class="pa-0">
           <v-img :src="foodInfo.imageUrl" aspect-ratio="1" contain>
-            <v-badge
-              class="badge-custom"
-              v-if="hasDiscount(foodInfo)"
-              :content="`-${discountPercent(foodInfo)}%`"
-              color="error"
-              location="top start"
-              offset-x="50"
-              offset-y="10"
-            />
+            <v-badge class="badge-custom" v-if="hasDiscount(foodInfo)" :content="`-${discountPercent(foodInfo)}%`"
+              location="top start" offset-x="50" offset-y="10" />
           </v-img>
         </v-col>
 
@@ -38,21 +29,15 @@
             </v-chip>
           </div>
 
-          <div
-            :class="
-              foodInfo.discountPrice !== null && foodInfo.discountPrice !== ''
-                ? 'text-grey text-decoration-line-through price mb-2'
-                : 'price mb-4'
-            "
-          >
+          <div :class="foodInfo.discountPrice !== null && foodInfo.discountPrice !== ''
+            ? 'text-grey text-decoration-line-through price mb-2'
+            : 'price mb-4'
+            ">
             {{ formatPrice(foodInfo.price) }}
           </div>
-          <div
-            v-if="
-              foodInfo.discountPrice !== null && foodInfo.discountPrice !== ''
-            "
-            class="price mb-4"
-          >
+          <div v-if="
+            foodInfo.discountPrice !== null && foodInfo.discountPrice !== ''
+          " class="price mb-4">
             {{ formatPrice(foodInfo.discountPrice) }}
           </div>
 
@@ -68,24 +53,12 @@
           <div class="text-common d-flex align-center">
             <div class="d-flex align-center">
               <span class="mr-2">Số lượng</span>
-              <v-number-input
-                inset
-                variant="solo-filled"
-                v-model="foodInfo.quantity"
-                control-variant="split"
-                elevation="0"
-                class="no-shadow-number"
-                hide-details
-                @update:model-value="(val) => onQuantityChange(val)"
-                :min="1"
-              ></v-number-input>
+              <v-number-input inset variant="solo-filled" v-model="foodInfo.quantity" control-variant="split"
+                elevation="0" class="no-shadow-number" hide-details @update:model-value="(val) => onQuantityChange(val)"
+                :min="1"></v-number-input>
             </div>
 
-            <v-btn
-              color="#029d16"
-              class="text-none ml-6"
-              @click="addToCart(foodInfo, $event)"
-            >
+            <v-btn color="#ff7337" class="text-none ml-6" @click="addToCart(foodInfo, $event)">
               Mua hàng
             </v-btn>
           </div>
@@ -292,7 +265,7 @@ const discountPercent = (foodInfo: any) => {
 .price {
   font-size: 28px;
   font-weight: 700;
-  color: #f57c00;
+  color: #ff5722;
 }
 
 .no-shadow-number ::v-deep(.v-field) {
@@ -311,5 +284,6 @@ const discountPercent = (foodInfo: any) => {
   padding: 4px 8px !important;
   min-width: unset;
   height: auto;
+  background-color: #ee4d2d !important;
 }
 </style>

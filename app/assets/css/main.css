@@ -3,7 +3,7 @@
 }
 
 .modal-title-custom {
-  background-color: #029d16;
+  background-color: #828282;
   font-size: 25px;
 }
 
@@ -26,6 +26,7 @@
   background-color: #df4c20 !important;
   color: #e9e2e2 !important;
 }
+
 .quantity-style {
   min-width: 110px !important;
 }

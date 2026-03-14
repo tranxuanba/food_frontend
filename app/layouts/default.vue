@@ -3,13 +3,9 @@
     <AppHeaderTop />
 
     <div class="page-container">
-      <AppHeaderMain
-        v-if="!isOrderPage && (useRoleName === 'BUYER' || useRoleName === '')"
-      />
+      <AppHeaderMain v-if="!isOrderPage && (useRoleName === 'BUYER' || useRoleName === '')" />
 
-      <AppMenu
-        v-if="!isOrderPage && (useRoleName === 'BUYER' || useRoleName === '')"
-      />
+      <AppMenu v-if="!isOrderPage && (useRoleName === 'BUYER' || useRoleName === '')" />
 
       <AppAdminMenu v-if="useRoleName === 'ADMIN'" />
 
@@ -18,9 +14,7 @@
       </main>
     </div>
 
-    <AppFooter
-      v-if="!isOrderPage && (useRoleName === 'BUYER' || useRoleName === '')"
-    />
+    <AppFooter v-if="!isOrderPage && (useRoleName === 'BUYER' || useRoleName === '')" />
   </div>
 </template>
 

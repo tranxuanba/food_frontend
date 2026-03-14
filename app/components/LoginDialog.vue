@@ -1,76 +1,37 @@
 <template>
-  <v-dialog
-    persistent
-    :model-value="modelValue"
-    max-width="600"
-    @update:modelValue="emit('update:modelValue', $event)"
-  >
+  <v-dialog persistent :model-value="modelValue" max-width="600" @update:modelValue="emit('update:modelValue', $event)">
     <v-card>
-      <v-card-title
-        class="modal-title-custom text-white d-flex align-center justify-space-between"
-      >
+      <v-card-title class="modal-title-custom text-white d-flex align-center justify-space-between">
         {{ isLogin ? "Đăng nhập tài khoản" : "Đăng ký tài khoản" }}
         <v-btn icon @click="modelValue = false" variant="text">
           <v-icon class="text-white">mdi-close</v-icon>
         </v-btn>
       </v-card-title>
 
-      <!-- Social -->
-      <div class="d-flex justify-center gap-2 my-5">
-        <v-btn color="#3b5998" variant="flat" class="text-none">
-          <v-icon start>mdi-facebook</v-icon>
-          Facebook
-        </v-btn>
-
-        <v-btn class="ml-3 text-none" color="#db4437" variant="flat">
-          <v-icon start>mdi-google</v-icon>
-          Google
-        </v-btn>
-      </div>
-
       <!-- Form -->
       <v-form ref="formRef">
-        <v-row>
+        <v-row class="mt-2">
           <v-col cols="1"></v-col>
           <v-col cols="10">
             <v-row>
               <v-col>
-                <label v-if="!isLogin" class="input-label text-common"
-                  >Tên người dùng</label
-                >
-                <v-text-field
-                  v-if="!isLogin"
-                  v-model="fullName"
-                  :rules="fullNameRules"
-                  variant="outlined"
-                  hide-details="auto"
-                  placeholder="Nhập họ và tên..."
-                ></v-text-field>
+                <label v-if="!isLogin" class="input-label text-common">Tên người dùng</label>
+                <v-text-field v-if="!isLogin" v-model="fullName" :rules="fullNameRules" variant="outlined"
+                  hide-details="auto" placeholder="Nhập họ và tên..."></v-text-field>
               </v-col>
             </v-row>
             <v-row>
               <v-col>
                 <label class="input-label text-common">Email</label>
-                <v-text-field
-                  v-model="email"
-                  variant="outlined"
-                  :rules="emailRules"
-                  hide-details="auto"
-                  placeholder="Nhập email..."
-                ></v-text-field>
+                <v-text-field v-model="email" variant="outlined" :rules="emailRules" hide-details="auto"
+                  placeholder="Nhập email..."></v-text-field>
               </v-col>
             </v-row>
             <v-row class="mb-4">
               <v-col>
                 <label class="input-label text-common">Mật khẩu</label>
-                <v-text-field
-                  v-model="password"
-                  :rules="passwordRules"
-                  variant="outlined"
-                  hide-details="auto"
-                  type="password"
-                  placeholder="Nhập mật khẩu..."
-                ></v-text-field>
+                <v-text-field v-model="password" :rules="passwordRules" variant="outlined" hide-details="auto"
+                  type="password" placeholder="Nhập mật khẩu..."></v-text-field>
               </v-col>
             </v-row>
 
@@ -81,13 +42,7 @@
             </div>
 
             <!-- Submit -->
-            <v-btn
-              @click="submitForm()"
-              block
-              color="#029d16"
-              size="large"
-              class="text-none"
-            >
+            <v-btn @click="submitForm()" block color="#029d16" size="large" class="text-none">
               {{ isLogin ? "Đăng nhập" : "Đăng ký" }}
             </v-btn>
           </v-col>
@@ -95,36 +50,24 @@
         </v-row>
       </v-form>
       <!-- Switch -->
-      <div class="text-center my-4 text-caption">
+      <div class="text-center mt-4 mb-6 text-caption">
         <template v-if="isLogin">
           Chưa có tài khoản? Đăng ký
-          <a
-            href="#"
-            class="text-green"
-            @click.prevent="emit('switch', 'register')"
-          >
+          <a href="#" class="text-green" @click.prevent="emit('switch', 'register')">
             tại đây
           </a>
         </template>
 
         <template v-else>
           Đã có tài khoản?
-          <a
-            href="#"
-            class="text-green"
-            @click.prevent="emit('switch', 'login')"
-          >
+          <a href="#" class="text-green" @click.prevent="emit('switch', 'login')">
             đăng nhập tại đây
           </a>
         </template>
       </div>
     </v-card>
   </v-dialog>
-  <MessageDialog
-    v-model="showMessage"
-    :message="message"
-    :isSuccess="isSuccess"
-  />
+  <MessageDialog v-model="showMessage" :message="message" :isSuccess="isSuccess" />
 </template>
 
 <script setup lang="ts">

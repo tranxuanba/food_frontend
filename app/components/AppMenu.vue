@@ -1,5 +1,5 @@
 <template>
-  <v-container style="background-color: #029d16; color: white; padding: unset">
+  <v-container style="background-color: #828282; color: white; padding: unset">
     <template v-for="(menu, index) in menus" :key="index">
       <v-btn
         class="text-none"
