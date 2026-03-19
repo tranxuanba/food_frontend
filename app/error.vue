@@ -10,12 +10,5 @@
 </template>
 
 <script setup lang="ts">
-const error = useError()
-const route = useRoute();
-onMounted(() => {
-  if (route.path === "/") {
-    navigateTo("/food-main", { replace: true });
-  }
-});
-
+const error = useError();
 </script>
